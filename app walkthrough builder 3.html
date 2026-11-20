@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Walkthrough Builder - Enterprise Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr 320px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .panel h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e1e5e9;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            width: 100%;
+            justify-content: center;
+            margin-top: 16px;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .preview-area {
+            background: #f8f9fa;
+            border-radius: 12px;
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .preview-area.active {
+            border-color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .preview-placeholder {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .demo-app {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 8px;
+            position: relative;
+            display: none;
+        }
+
+        .demo-app.active {
+            display: block;
+        }
+
+        .demo-header {
+            background: #343a40;
+            color: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .demo-content {
+            padding: 24px;
+            height: calc(100% - 64px);
+            overflow-y: auto;
+        }
+
+        .demo-element {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 12px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .demo-element:hover {
+            border-color: #667eea;
+            transform: translateY(-1px);
+        }
+
+        .demo-element.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .step-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-item:hover {
+            background: #e9ecef;
+            transform: translateX(4px);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tooltip-overlay {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            z-index: 1000;
+        }
+
+        .tooltip-overlay.active {
+            display: block;
+        }
+
+        .tooltip-highlight {
+            position: absolute;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+        }
+
+        .tooltip-content {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            z-index: 1002;
+        }
+
+        .tooltip-content h4 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .tooltip-content p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .tooltip-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+        .advanced-options {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .color-input {
+            width: 60px !important;
+            height: 40px;
+            padding: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .json-preview {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 App Walkthrough Builder</h1>
+            <p>Professional toolkit for creating engaging user onboarding experiences with advanced analytics and export capabilities</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Control Panel -->
+            <div class="panel">
+                <h3>
+                    <span class="icon">⚙️</span>
+                    Step Configuration
+                </h3>
+                
+                <div class="form-group">
+                    <label>Step Title</label>
+                    <input type="text" id="stepTitle" placeholder="Welcome to our app!" maxlength="50">
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="stepDescription" placeholder="This is your dashboard where you can manage all your projects..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Element</label>
+                    <select id="targetElement">
+                        <option value="">Select an element to highlight</option>
+                        <option value="header">Navigation Header</option>
+                        <option value="dashboard">Dashboard Card</option>
+                        <option value="projects">Projects Section</option>
+                        <option value="settings">Settings Panel</option>
+                        <option value="profile">User Profile</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tooltip Position</label>
+                    <select id="tooltipPosition">
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                        <option value="center">Center</option>
+                    </select>
+                </div>
+
+                <div class="advanced-options">
+                    <h4>Advanced Options</h4>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="autoAdvance">
+                        <label for="autoAdvance">Auto-advance (3s delay)</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="dismissible">
+                        <label for="dismissible">Dismissible</label>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="pulseEffect">
+                        <label for="pulseEffect">Pulse animation</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Highlight Color</label>
+                        <input type="color" id="highlightColor" value="#667eea" class="color-input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Priority Level</label>
+                        <select id="priorityLevel">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="addStep">
+                    <span class="icon">➕</span>
+                    Add Step
+                </button>
+            </div>
+
+            <!-- Preview Area -->
+            <div class="panel">
+                <h3>
+                    <span class="icon">👁️</span>
+                    Live Preview
+                </h3>
+                
+                <div class="preview-area" id="previewArea">
+                    <div class="preview-placeholder">
+                        <p>🎨 Select elements and add steps to see your walkthrough come to life</p>
+                        <button class="btn btn-secondary" id="loadDemo" style="margin-top: 16px;">
+                            Load Demo App
+                        </button>
+                    </div>
+
+                    <div class="demo-app" id="demoApp">
+                        <div class="demo-header" data-element="header">
+                            <span>🚀</span>
+                            <h3>ProductFlow Dashboard</h3>
+                        </div>
+                        <div class="demo-content">
+                            <div class="demo-element" data-element="dashboard">
+                                <h4>📊 Analytics Dashboard</h4>
+                                <p>View your key metrics and performance indicators</p>
+                            </div>
+                            <div class="demo-element" data-element="projects">
+                                <h4>📁 Active Projects</h4>
+                                <p>Manage and track your ongoing projects</p>
+                            </div>
+                            <div class="demo-element" data-element="settings">
+                                <h4>⚙️ Configuration Settings</h4>
+                                <p>Customize your workspace and preferences</p>
+                            </div>
+                            <div class="demo-element" data-element="profile">
+                                <h4>👤 User Profile</h4>
+                                <p>Manage your account and profile information</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tooltip-overlay" id="tooltipOverlay">
+                        <div class="tooltip-highlight" id="tooltipHighlight"></div>
+                        <div class="tooltip-content" id="tooltipContent">
+                            <h4 id="tooltipTitle">Step Title</h4>
+                            <p id="tooltipDescription">Step description goes here...</p>
+                            <div class="tooltip-actions">
+                                <button class="btn btn-secondary" id="prevStep">Previous</button>
+                                <button class="btn btn-primary" id="nextStep">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 16px; display: flex; gap: 8px;">
+                    <button class="btn btn-primary" id="playWalkthrough">
+                        <span class="icon">▶️</span>
+                        Play Walkthrough
+                    </button>
+                    <button class="btn btn-secondary" id="resetWalkthrough">
+                        <span class="icon">🔄</span>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Steps Management -->
+            <div class="panel">
+                <h3>
+                    <span class="icon">📋</span>
+                    Walkthrough Steps
+                </h3>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalSteps">0</span>
+                        <div class="stat-label">Total Steps</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="avgDuration">0s</span>
+                        <div class="stat-label">Avg Duration</div>
+                    </div>
+                </div>
+
+                <div id="stepsList">
+                    <div style="text-align: center; color: #6c757d; padding: 40px 0;">
+                        <p>No steps added yet</p>
+                        <p style="font-size: 0.9em; margin-top: 8px;">Configure and add your first step to get started</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <button class="btn btn-secondary" id="clearAll" style="width: 100%;">
+                        <span class="icon">🗑️</span>
+                        Clear All Steps
+                    </button>
+                    
+                    <button class="btn btn-export" id="exportJson">
+                        <span class="icon">📤</span>
+                        Export Walkthrough JSON
+                    </button>
+
+                    <div class="success-message" id="successMessage">
+                        <span class="icon">✅</span>
+                        <span>Walkthrough exported successfully!</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <h4>Import Configuration</h4>
+                    <input type="file" id="importJson" accept=".json" style="margin-bottom: 12px;">
+                    <button class="btn btn-secondary" id="importBtn" style="width: 100%;">
+                        <span class="icon">📥</span>
+                        Import JSON
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class WalkthroughBuilder {
+            constructor() {
+                this.steps = [];
+                this.currentStepIndex = 0;
+                this.isPlaying = false;
+                this.init();
+            }
+
+            init() {
+                this.bindEvents();
+                this.updateStats();
+            }
+
+            bindEvents() {
+                document.getElementById('loadDemo').addEventListener('click', () => this.loadDemoApp());
+                document.getElementById('addStep').addEventListener('click', () => this.addStep());
+                document.getElementById('playWalkthrough').addEventListener('click', () => this.playWalkthrough());
+                document.getElementById('resetWalkthrough').addEventListener('click', () => this.resetWalkthrough());
+                document.getElementById('clearAll').addEventListener('click', () => this.clearAllSteps());
+                document.getElementById('exportJson').addEventListener('click', () => this.exportJson());
+                document.getElementById('importBtn').addEventListener('click', () => this.importJson());
+                document.getElementById('nextStep').addEventListener('click', () => this.nextStep());
+                document.getElementById('prevStep').addEventListener('click', () => this.previousStep());
+
+                // Target element selection
+                document.getElementById('targetElement').addEventListener('change', (e) => {
+                    this.highlightElement(e.target.value);
+                });
+
+                // Demo app element selection
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.demo-element')) {
+                        const element = e.target.closest('.demo-element');
+                        const elementType = element.getAttribute('data-element');
+                        document.getElementById('targetElement').value = elementType;
+                        this.selectDemoElement(element);
+                    }
+                });
+            }
+
+            loadDemoApp() {
+                document.querySelector('.preview-placeholder').style.display = 'none';
+                document.getElementById('demoApp').classList.add('active');
+                document.getElementById('previewArea').classList.add('active');
+            }
+
+            selectDemoElement(element) {
+                document.querySelectorAll('.demo-element').forEach(el => el.classList.remove('selected'));
+                element.classList.add('selected');
+            }
+
+            addStep() {
+                const title = document.getElementById('stepTitle').value.trim();
+                const description = document.getElementById('stepDescription').value.trim();
+                const target = document.getElementById('targetElement').value;
+                const position = document.getElementById('tooltipPosition').value;
+
+                if (!title || !description || !target) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+
+                const step = {
+                    id: Date.now(),
+                    title,
+                    description,
+                    target,
+                    position,
+                    autoAdvance: document.getElementById('autoAdvance').checked,
+                    dismissible: document.getElementById('dismissible').checked,
+                    pulseEffect: document.getElementById('pulseEffect').checked,
+                    highlightColor: document.getElementById('highlightColor').value,
+                    priority: document.getElementById('priorityLevel').value,
+                    duration: this.estimateDuration(description),
+                    created: new Date().toISOString()
+                };
+
+                this.steps.push(step);
+                this.renderSteps();
+                this.updateStats();
+                this.clearForm();
+            }
+
+            estimateDuration(text) {
+                // Estimate reading time: ~200 words per minute
+                const words = text.split(' ').length;
+                return Math.max(3, Math.ceil((words / 200) * 60));
+            }
+
+            clearForm() {
+                document.getElementById('stepTitle').value = '';
+                document.getElementById('stepDescription').value = '';
+                document.getElementById('targetElement').value = '';
+                document.getElementById('autoAdvance').checked = false;
+                document.getElementById('dismissible').checked = false;
+                document.getElementById('pulseEffect').checked = false;
+            }
+
+            renderSteps() {
+                const stepsList = document.getElementById('stepsList');
+                
+                if (this.steps.length === 0) {
+                    stepsList.innerHTML = `
+                        <div style="text-align: center; color: #6c757d; padding: 40px 0;">
+                            <p>No steps added yet</p>
+                            <p style="font-size: 0.9em; margin-top: 8px;">Configure and add your first step to get started</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                stepsList.innerHTML = this.steps.map((step, index) => `
+                    <div class="step-item">
+                        <div class="step-header">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div class="step-number">${index + 1}</div>
+                                <div>
+                                    <strong>${step.title}</strong>
+                                    <div style="font-size: 0.9em; color: #666;">
+                                        Target: ${step.target} • ${step.duration}s • ${step.priority}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step-actions">
+                                <button class="btn btn-secondary" onclick="walkthroughBuilder.editStep(${step.id})" title="Edit">
+                                    ✏️
+                                </button>
+                                <button class="btn btn-danger" onclick="walkthroughBuilder.deleteStep(${step.id})" title="Delete">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                        <p style="margin-top: 8px; color: #666; font-size: 0.9em;">${step.description}</p>
+                        <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+                            ${step.autoAdvance ? '<span style="background: #e3f2fd; color: #1976d2; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">Auto-advance</span>' : ''}
+                            ${step.dismissible ? '<span style="background: #f3e5f5; color: #7b1fa2; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">Dismissible</span>' : ''}
+                            ${step.pulseEffect ? '<span style="background: #e8f5e8; color: #388e3c; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">Pulse</span>' : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            editStep(stepId) {
+                const step = this.steps.find(s => s.id === stepId);
+                if (!step) return;
+
+                document.getElementById('stepTitle').value = step.title;
+                document.getElementById('stepDescription').value = step.description;
+                document.getElementById('targetElement').value = step.target;
+                document.getElementById('tooltipPosition').value = step.position;
+                document.getElementById('autoAdvance').checked = step.autoAdvance;
+                document.getElementById('dismissible').checked = step.dismissible;
+                document.getElementById('pulseEffect').checked = step.pulseEffect;
+                document.getElementById('highlightColor').value = step.highlightColor;
+                document.getElementById('priorityLevel').value = step.priority;
+
+                this.deleteStep(stepId);
+            }
+
+            deleteStep(stepId) {
+                this.steps = this.steps.filter(s => s.id !== stepId);
+                this.renderSteps();
+                this.updateStats();
+            }
+
+            clearAllSteps() {
+                if (this.steps.length > 0 && confirm('Are you sure you want to clear all steps?')) {
+                    this.steps = [];
+                    this.renderSteps();
+                    this.updateStats();
+                    this.resetWalkthrough();
+                }
+            }
+
+            updateStats() {
+                document.getElementById('totalSteps').textContent = this.steps.length;
+                const avgDuration = this.steps.length > 0 
+                    ? Math.round(this.steps.reduce((sum, step) => sum + step.duration, 0) / this.steps.length)
+                    : 0;
+                document.getElementById('avgDuration').textContent = avgDuration + 's';
+            }
+
+            playWalkthrough() {
+                if (this.steps.length === 0) {
+                    alert('Please add some steps first');
+                    return;
+                }
+
+                this.loadDemoApp();
+                this.currentStepIndex = 0;
+                this.isPlaying = true;
+                this.showCurrentStep();
+            }
+
+            showCurrentStep() {
+                if (this.currentStepIndex >= this.steps.length) {
+                    this.resetWalkthrough();
+                    return;
+                }
+
+                const step = this.steps[this.currentStepIndex];
+                const targetElement = document.querySelector(`[data-element="${step.target}"]`);
+                
+                if (!targetElement) {
+                    this.nextStep();
+                    return;
+                }
+
+                const overlay = document.getElementById('tooltipOverlay');
+                const highlight = document.getElementById('tooltipHighlight');
+                const content = document.getElementById('tooltipContent');
+
+                // Position highlight
+                const rect = targetElement.getBoundingClientRect();
+                const previewRect = document.getElementById('previewArea').getBoundingClientRect();
+                
+                highlight.style.left = (rect.left - previewRect.left - 5) + 'px';
+                highlight.style.top = (rect.top - previewRect.top - 5) + 'px';
+                highlight.style.width = (rect.width + 10) + 'px';
+                highlight.style.height = (rect.height + 10) + 'px';
+                highlight.style.borderColor = step.highlightColor;
+
+                // Add pulse effect if enabled
+                if (step.pulseEffect) {
+                    highlight.classList.add('pulse');
+                } else {
+                    highlight.classList.remove('pulse');
+                }
+
+                // Position tooltip content
+                const tooltipRect = content.getBoundingClientRect();
+                let left, top;
+
+                switch (step.position) {
+                    case 'top':
+                        left = rect.left - previewRect.left + (rect.width - 300) / 2;
+                        top = rect.top - previewRect.top - tooltipRect.height - 20;
+                        break;
+                    case 'bottom':
+                        left = rect.left - previewRect.left + (rect.width - 300) / 2;
+                        top = rect.bottom - previewRect.top + 20;
+                        break;
+                    case 'left':
+                        left = rect.left - previewRect.left - 320;
+                        top = rect.top - previewRect.top + (rect.height - tooltipRect.height) / 2;
+                        break;
+                    case 'right':
+                        left = rect.right - previewRect.left + 20;
+                        top = rect.top - previewRect.top + (rect.height - tooltipRect.height) / 2;
+                        break;
+                    case 'center':
+                    default:
+                        left = (previewRect.width - 300) / 2;
+                        top = (previewRect.height - tooltipRect.height) / 2;
+                        break;
+                }
+
+                // Ensure tooltip stays within bounds
+                left = Math.max(10, Math.min(left, previewRect.width - 310));
+                top = Math.max(10, Math.min(top, previewRect.height - tooltipRect.height - 10));
+
+                content.style.left = left + 'px';
+                content.style.top = top + 'px';
+
+                // Update content
+                document.getElementById('tooltipTitle').textContent = step.title;
+                document.getElementById('tooltipDescription').textContent = step.description;
+
+                // Update navigation buttons
+                document.getElementById('prevStep').style.display = this.currentStepIndex > 0 ? 'inline-flex' : 'none';
+                document.getElementById('nextStep').textContent = this.currentStepIndex < this.steps.length - 1 ? 'Next' : 'Finish';
+
+                overlay.classList.add('active');
+
+                // Auto-advance if enabled
+                if (step.autoAdvance) {
+                    setTimeout(() => {
+                        if (this.isPlaying) this.nextStep();
+                    }, step.duration * 1000);
+                }
+
+                // Handle dismissible
+                if (step.dismissible) {
+                    overlay.addEventListener('click', (e) => {
+                        if (e.target === overlay) this.resetWalkthrough();
+                    });
+                }
+            }
+
+            nextStep() {
+                this.currentStepIndex++;
+                if (this.currentStepIndex >= this.steps.length) {
+                    this.resetWalkthrough();
+                    this.showCompletionMessage();
+                } else {
+                    this.showCurrentStep();
+                }
+            }
+
+            previousStep() {
+                if (this.currentStepIndex > 0) {
+                    this.currentStepIndex--;
+                    this.showCurrentStep();
+                }
+            }
+
+            resetWalkthrough() {
+                this.isPlaying = false;
+                this.currentStepIndex = 0;
+                document.getElementById('tooltipOverlay').classList.remove('active');
+                document.getElementById('tooltipHighlight').classList.remove('pulse');
+                document.querySelectorAll('.demo-element').forEach(el => el.classList.remove('selected'));
+            }
+
+            showCompletionMessage() {
+                const overlay = document.getElementById('tooltipOverlay');
+                const content = document.getElementById('tooltipContent');
+                
+                document.getElementById('tooltipTitle').textContent = '🎉 Walkthrough Complete!';
+                document.getElementById('tooltipDescription').textContent = 'You\'ve successfully completed the product tour. Ready to get started?';
+                document.getElementById('prevStep').style.display = 'none';
+                document.getElementById('nextStep').textContent = 'Close';
+                document.getElementById('nextStep').onclick = () => this.resetWalkthrough();
+                
+                content.style.left = '50%';
+                content.style.top = '50%';
+                content.style.transform = 'translate(-50%, -50%)';
+                
+                overlay.classList.add('active');
+                
+                setTimeout(() => {
+                    content.style.transform = '';
+                }, 3000);
+            }
+
+            highlightElement(elementType) {
+                if (!elementType) return;
+                
+                const targetElement = document.querySelector(`[data-element="${elementType}"]`);
+                if (targetElement) {
+                    this.selectDemoElement(targetElement);
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+
+            exportJson() {
+                const walkthroughData = {
+                    metadata: {
+                        version: '2.1.0',
+                        created: new Date().toISOString(),
+                        totalSteps: this.steps.length,
+                        estimatedDuration: this.steps.reduce((sum, step) => sum + step.duration, 0),
+                        generator: 'App Walkthrough Builder Enterprise'
+                    },
+                    configuration: {
+                        theme: {
+                            primaryColor: '#667eea',
+                            overlayOpacity: 0.7,
+                            borderRadius: 8,
+                            animation: 'fade'
+                        },
+                        behavior: {
+                            allowSkip: true,
+                            trackAnalytics: true,
+                            saveProgress: true,
+                            responsive: true
+                        }
+                    },
+                    steps: this.steps.map((step, index) => ({
+                        id: step.id,
+                        order: index + 1,
+                        title: step.title,
+                        description: step.description,
+                        target: {
+                            selector: `[data-element="${step.target}"]`,
+                            fallback: `.${step.target}`,
+                            waitForElement: true
+                        },
+                        tooltip: {
+                            position: step.position,
+                            highlightColor: step.highlightColor,
+                            showArrow: true,
+                            maxWidth: 300
+                        },
+                        behavior: {
+                            autoAdvance: step.autoAdvance,
+                            autoAdvanceDelay: step.duration * 1000,
+                            dismissible: step.dismissible,
+                            required: step.priority === 'critical',
+                            pulseEffect: step.pulseEffect
+                        },
+                        analytics: {
+                            priority: step.priority,
+                            category: 'onboarding',
+                            action: 'step_view',
+                            label: step.title
+                        },
+                        accessibility: {
+                            ariaLabel: step.title,
+                            focusManagement: true,
+                            keyboardNavigation: true
+                        }
+                    })),
+                    integrations: {
+                        googleAnalytics: {
+                            enabled: false,
+                            trackingId: 'GA_TRACKING_ID'
+                        },
+                        mixpanel: {
+                            enabled: false,
+                            projectToken: 'MIXPANEL_TOKEN'
+                        },
+                        amplitude: {
+                            enabled: false,
+                            apiKey: 'AMPLITUDE_API_KEY'
+                        }
+                    },
+                    localization: {
+                        defaultLanguage: 'en',
+                        supportedLanguages: ['en'],
+                        translations: {
+                            en: {
+                                next: 'Next',
+                                previous: 'Previous',
+                                skip: 'Skip Tour',
+                                finish: 'Finish',
+                                close: 'Close'
+                            }
+                        }
+                    }
+                };
+
+                const jsonString = JSON.stringify(walkthroughData, null, 2);
+                const blob = new Blob([jsonString], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `walkthrough-${Date.now()}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                // Show success message
+                const successMsg = document.getElementById('successMessage');
+                successMsg.style.display = 'flex';
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 3000);
+
+                // Update preview with formatted JSON
+                this.showJsonPreview(walkthroughData);
+            }
+
+            showJsonPreview(data) {
+                const previewArea = document.getElementById('previewArea');
+                const existingPreview = document.getElementById('jsonPreview');
+                
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+
+                const jsonPreview = document.createElement('div');
+                jsonPreview.id = 'jsonPreview';
+                jsonPreview.className = 'json-preview';
+                jsonPreview.textContent = JSON.stringify(data, null, 2);
+                
+                previewArea.appendChild(jsonPreview);
+                
+                setTimeout(() => {
+                    if (jsonPreview.parentNode) {
+                        jsonPreview.remove();
+                    }
+                }, 5000);
+            }
+
+            importJson() {
+                const fileInput = document.getElementById('importJson');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    alert('Please select a JSON file to import');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        
+                        if (data.steps && Array.isArray(data.steps)) {
+                            this.steps = data.steps.map(step => ({
+                                id: step.id || Date.now() + Math.random(),
+                                title: step.title || 'Imported Step',
+                                description: step.description || '',
+                                target: step.target?.selector?.replace(/\[data-element="([^"]+)"\]/, '$1') || step.target || '',
+                                position: step.tooltip?.position || 'bottom',
+                                autoAdvance: step.behavior?.autoAdvance || false,
+                                dismissible: step.behavior?.dismissible || false,
+                                pulseEffect: step.behavior?.pulseEffect || false,
+                                highlightColor: step.tooltip?.highlightColor || '#667eea',
+                                priority: step.analytics?.priority || 'medium',
+                                duration: step.behavior?.autoAdvanceDelay ? step.behavior.autoAdvanceDelay / 1000 : 5,
+                                created: step.created || new Date().toISOString()
+                            }));
+                            
+                            this.renderSteps();
+                            this.updateStats();
+                            alert(`Successfully imported ${this.steps.length} steps!`);
+                        } else {
+                            alert('Invalid JSON format. Please ensure the file contains a steps array.');
+                        }
+                    } catch (error) {
+                        alert('Error parsing JSON file: ' + error.message);
+                    }
+                };
+                
+                reader.readAsText(file);
+            }
+        }
+
+        // Initialize the application
+        const walkthroughBuilder = new WalkthroughBuilder();
+
+        // Add some sample data for demo purposes
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add sample steps for demonstration
+            setTimeout(() => {
+                const sampleSteps = [
+                    {
+                        id: 1,
+                        title: 'Welcome to ProductFlow',
+                        description: 'This is your main dashboard where you can view all your key metrics and get an overview of your projects.',
+                        target: 'dashboard',
+                        position: 'bottom',
+                        autoAdvance: false,
+                        dismissible: true,
+                        pulseEffect: true,
+                        highlightColor: '#667eea',
+                        priority: 'high',
+                        duration: 8,
+                        created: new Date().toISOString()
+                    },
+                    {
+                        id: 2,
+                        title: 'Manage Your Projects',
+                        description: 'Here you can view, create, and manage all your active projects. Click on any project to dive deeper into its details.',
+                        target: 'projects',
+                        position: 'right',
+                        autoAdvance: false,
+                        dismissible: true,
+                        pulseEffect: false,
+                        highlightColor: '#28a745',
+                        priority: 'medium',
+                        duration: 10,
+                        created: new Date().toISOString()
+                    }
+                ];
+
+                // Uncomment to add sample data
+                // walkthroughBuilder.steps = sampleSteps;
+                // walkthroughBuilder.renderSteps();
+                // walkthroughBuilder.updateStats();
+            }, 1000);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (walkthroughBuilder.isPlaying) {
+                switch(e.key) {
+                    case 'ArrowRight':
+                    case 'Space':
+                        e.preventDefault();
+                        walkthroughBuilder.nextStep();
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        walkthroughBuilder.previousStep();
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        walkthroughBuilder.resetWalkthrough();
+                        break;
+                }
+            }
+        });
+
+        // Auto-save functionality (using memory storage)
+        let autoSaveData = {};
+        
+        setInterval(() => {
+            if (walkthroughBuilder.steps.length > 0) {
+                autoSaveData = {
+                    steps: walkthroughBuilder.steps,
+                    lastSaved: new Date().toISOString()
+                };
+            }
+        }, 30000); // Auto-save every 30 seconds
+
+        // Add resize handler for responsive tooltips
+        window.addEventListener('resize', () => {
+            if (walkthroughBuilder.isPlaying) {
+                setTimeout(() => {
+                    walkthroughBuilder.showCurrentStep();
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
