@@ -1,0 +1,2060 @@
+/* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Walkthrough Builder Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #E55A2B;
+            --primary-light: #FF8C5A;
+            --secondary: #2E86AB;
+            --secondary-light: #4A9BC7;
+            --accent: #A23B72;
+            --accent-light: #C24E8A;
+            --bg-dark: #0F0F0F;
+            --bg-medium: #1E1E1E;
+            --bg-light: #2D2D2D;
+            --bg-card: #252525;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B8BCC8;
+            --text-muted: #8B8B8B;
+            --border: #3A3A3A;
+            --border-light: #484848;
+            --success: #00D084;
+            --warning: #FFA726;
+            --error: #FF4757;
+            --info: #3B82F6;
+            --shadow-sm: rgba(0, 0, 0, 0.1);
+            --shadow: rgba(0, 0, 0, 0.25);
+            --shadow-lg: rgba(0, 0, 0, 0.4);
+            --shadow-colored: rgba(255, 107, 53, 0.25);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+            --border-radius-sm: 6px;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --border-radius-xl: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: radial-gradient(ellipse at top, rgba(255, 107, 53, 0.1) 0%, transparent 50%), 
+                        linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-medium) 50%, var(--bg-dark) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-weight: 400;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 72px;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 1000;
+            box-shadow: 0 1px 3px var(--shadow-sm);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.6;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .logo::before {
+            content: "◉";
+            margin-right: 12px;
+            font-size: 28px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 340px;
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-right: 1px solid var(--glass-border);
+            padding: 96px 24px 24px;
+            overflow-y: auto;
+            transition: all var(--transition-normal);
+            box-shadow: inset -1px 0 0 var(--glass-border);
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        .sidebar-section {
+            margin-bottom: 36px;
+            position: relative;
+        }
+
+        .sidebar-section::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            opacity: 0.5;
+        }
+
+        .sidebar-section:last-child::after {
+            display: none;
+        }
+
+        .sidebar-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .sidebar-title::before {
+            content: "";
+            width: 4px;
+            height: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            margin-right: 12px;
+            border-radius: 2px;
+            box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 72px;
+            position: relative;
+        }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(46, 134, 171, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 40% 80%, rgba(162, 59, 114, 0.03) 0%, transparent 40%);
+            overflow: hidden;
+        }
+
+        .canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 30px 30px, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 90px 90px, rgba(255, 107, 53, 0.02) 1px, transparent 1px);
+            background-size: 120px 120px, 180px 180px;
+            background-position: 0 0, 60px 60px;
+        }
+
+        .canvas::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 49%, rgba(255, 107, 53, 0.01) 50%, transparent 51%);
+            pointer-events: none;
+        }
+
+        /* Mock App Interface */
+        .mock-app {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 420px;
+            height: 640px;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F8FAFC 100%);
+            border-radius: 24px;
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.3),
+                0 16px 32px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+            backdrop-filter: blur(20px);
+        }
+
+        .mock-app:hover {
+            transform: translate(-50%, -50%) scale(1.02);
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.35),
+                0 20px 40px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .mock-header {
+            height: 72px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            letter-spacing: -0.3px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .mock-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
+        .mock-content {
+            padding: 24px;
+            color: #374151;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F9FAFB 100%);
+            height: calc(100% - 72px);
+            overflow-y: auto;
+        }
+
+        .mock-element {
+            padding: 18px;
+            margin: 12px 0;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid #E5E7EB;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .mock-element::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(255, 107, 53, 0.02) 100%);
+            border-radius: var(--border-radius-lg);
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .mock-element:hover {
+            background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 100%);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: #D1D5DB;
+        }
+
+        .mock-element:hover::before {
+            opacity: 1;
+        }
+
+        .mock-element.highlighted {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.08) 0%, rgba(255, 107, 53, 0.04) 100%);
+            border-color: var(--primary);
+            box-shadow: 
+                0 0 0 3px rgba(255, 107, 53, 0.2),
+                0 8px 24px rgba(255, 107, 53, 0.15);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .mock-element strong {
+            color: #1F2937;
+            font-weight: 600;
+            font-size: 16px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .mock-element p {
+            color: #6B7280;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Tooltip Overlay */
+        .tooltip-overlay {
+            position: absolute;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            color: var(--text-primary);
+            padding: 20px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 8px 16px rgba(0, 0, 0, 0.2),
+                0 0 0 1px var(--glass-border);
+            max-width: 320px;
+            z-index: 1000;
+            border: 1px solid var(--border);
+            transition: all var(--transition-normal);
+        }
+
+        .tooltip-overlay::before {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: rgba(15, 15, 15, 0.95);
+            border: 1px solid var(--border);
+            transform: rotate(45deg);
+            backdrop-filter: blur(20px);
+        }
+
+        .tooltip-overlay.bottom::before {
+            top: -8px;
+            left: 24px;
+            border-bottom: none;
+            border-right: none;
+        }
+
+        .tooltip-overlay.top::before {
+            bottom: -8px;
+            left: 24px;
+            border-top: none;
+            border-left: none;
+        }
+
+        .tooltip-overlay.left::before {
+            right: -8px;
+            top: 20px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .tooltip-overlay.right::before {
+            left: -8px;
+            top: 20px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tooltip-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .tooltip-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all var(--transition-normal);
+            text-transform: none;
+            letter-spacing: 0.3px;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left var(--transition-normal);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.4);
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .btn-icon {
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn:disabled:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all var(--transition-normal);
+            font-family: inherit;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 
+                0 0 0 3px rgba(255, 107, 53, 0.1),
+                inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+            line-height: 1.6;
+        }
+
+        .form-select {
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 12px center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: 40px;
+            appearance: none;
+        }
+
+        /* Steps List */
+        .steps-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius-lg);
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .step-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .step-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateX(6px);
+            border-color: var(--border-light);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-item:hover::before {
+            opacity: 0.6;
+        }
+
+        .step-item.active {
+            border-color: var(--primary);
+            background: rgba(255, 107, 53, 0.08);
+            transform: translateX(6px);
+            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.15);
+        }
+
+        .step-item.active::before {
+            opacity: 1;
+        }
+
+        .step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+        }
+
+        .step-item.active .step-number {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+        }
+
+        .step-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .step-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .step-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .step-item:hover .step-actions {
+            opacity: 1;
+        }
+
+        .step-delete {
+            padding: 4px 8px;
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(255, 71, 87, 0.2);
+            border-radius: var(--border-radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .step-delete:hover {
+            background: rgba(255, 71, 87, 0.2);
+            border-color: var(--error);
+        }
+
+        /* Properties Panel */
+        .properties-panel {
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-left: 1px solid var(--glass-border);
+            width: 320px;
+            padding: 24px;
+            overflow-y: auto;
+            box-shadow: inset 1px 0 0 var(--glass-border);
+        }
+
+        .properties-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .properties-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .properties-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .properties-panel::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* Color Picker */
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all var(--transition-normal);
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-option::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-option:hover::after {
+            opacity: 1;
+        }
+
+        .color-option.active {
+            border-color: var(--text-primary);
+            box-shadow: 
+                0 0 0 3px rgba(255, 255, 255, 0.2),
+                0 4px 16px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Export Panel */
+        .export-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .export-modal {
+            background: rgba(30, 30, 30, 0.98);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: var(--border-radius-xl);
+            padding: 32px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.4),
+                0 16px 32px rgba(0, 0, 0, 0.2);
+            animation: slideInUp 0.3s ease;
+        }
+
+        .export-modal h2 {
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .export-code {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 400px;
+            margin: 20px 0;
+            color: #E1E5E9;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .export-code::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .export-code::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        .export-code::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .export-code::-webkit-scrollbar-thumb:hover {
+            background: var(--border-light);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 0 0 rgba(255, 107, 53, 0.4),
+                    0 8px 24px rgba(255, 107, 53, 0.15);
+            }
+            50% {
+                box-shadow: 
+                    0 0 0 12px rgba(255, 107, 53, 0),
+                    0 8px 24px rgba(255, 107, 53, 0.15);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 
+                    0 0 5px var(--primary),
+                    0 0 10px var(--primary),
+                    0 0 15px var(--primary);
+            }
+            50% {
+                box-shadow: 
+                    0 0 10px var(--primary),
+                    0 0 20px var(--primary),
+                    0 0 30px var(--primary);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .fade-in {
+            animation: slideIn 0.5s ease;
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 300px;
+            }
+            
+            .properties-panel {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 16px;
+            }
+            
+            .header-actions {
+                gap: 8px;
+            }
+            
+            .sidebar {
+                width: 280px;
+                transform: translateX(-100%);
+                position: fixed;
+                height: 100vh;
+                z-index: 1500;
+                box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .properties-panel {
+                width: 100%;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                height: 50vh;
+                transform: translateY(100%);
+                transition: transform var(--transition-normal);
+                border-left: none;
+                border-top: 1px solid var(--glass-border);
+                border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+            }
+            
+            .properties-panel.open {
+                transform: translateY(0);
+            }
+            
+            .mock-app {
+                width: 320px;
+                height: 580px;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            
+            .export-modal {
+                width: 95%;
+                padding: 24px;
+                margin: 16px;
+            }
+            
+            .export-code {
+                font-size: 12px;
+                max-height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                height: 64px;
+                padding: 0 12px;
+            }
+            
+            .logo {
+                font-size: 18px;
+            }
+            
+            .main-content {
+                padding-top: 64px;
+            }
+            
+            .sidebar {
+                padding: 80px 16px 16px;
+            }
+            
+            .mock-app {
+                width: 280px;
+                height: 480px;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            .btn-small {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden { 
+            display: none !important; 
+        }
+        
+        .fade-in { 
+            animation: slideIn 0.5s ease; 
+        }
+        
+        .text-center { 
+            text-align: center; 
+        }
+        
+        .mb-2 { 
+            margin-bottom: 8px; 
+        }
+        
+        .mb-3 { 
+            margin-bottom: 12px; 
+        }
+        
+        .mt-3 { 
+            margin-top: 12px; 
+        }
+        
+        .mr-2 { 
+            margin-right: 8px; 
+        }
+        
+        .ml-auto { 
+            margin-left: auto; 
+        }
+        
+        .flex { 
+            display: flex; 
+        }
+        
+        .items-center { 
+            align-items: center; 
+        }
+        
+        .justify-between { 
+            justify-content: space-between; 
+        }
+        
+        .gap-2 { 
+            gap: 8px; 
+        }
+        
+        .gap-3 { 
+            gap: 12px; 
+        }
+        
+        .relative { 
+            position: relative; 
+        }
+        
+        .absolute { 
+            position: absolute; 
+        }
+        
+        .pointer { 
+            cursor: pointer; 
+        }
+        
+        .select-none { 
+            user-select: none; 
+        }
+        
+        .overflow-hidden { 
+            overflow: hidden; 
+        }
+        
+        .rounded { 
+            border-radius: var(--border-radius); 
+        }
+        
+        .rounded-lg { 
+            border-radius: var(--border-radius-lg); 
+        }
+        
+        .opacity-50 { 
+            opacity: 0.5; 
+        }
+        
+        .opacity-75 { 
+            opacity: 0.75; 
+        }
+        
+        .transform { 
+            transform: translateZ(0); 
+        }
+        
+        .transition { 
+            transition: all var(--transition-normal); 
+        }
+        
+        .hover\:scale-105:hover { 
+            transform: scale(1.05); 
+        }
+        
+        .hover\:opacity-80:hover { 
+            opacity: 0.8; 
+        }
+
+        /* Focus States for Accessibility */
+        .btn:focus,
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus,
+        .step-item:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Mode Support */
+        @media (prefers-contrast: high) {
+            :root {
+                --bg-dark: #000000;
+                --bg-medium: #1a1a1a;
+                --text-primary: #ffffff;
+                --border: #666666;
+            }
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">Walkthrough Builder Pro</div>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-small" onclick="previewWalkthrough()">Preview</button>
+                <button class="btn btn-primary btn-small" onclick="exportWalkthrough()">Export JSON</button>
+                <button class="btn btn-secondary btn-small" onclick="saveProject()">Save Project</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Project Settings</h3>
+                <div class="form-group">
+                    <label class="form-label">Project Name</label>
+                    <input type="text" class="form-input" id="projectName" value="My App Walkthrough" placeholder="Enter project name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Target Audience</label>
+                    <select class="form-select" id="targetAudience">
+                        <option value="new-users">New Users</option>
+                        <option value="existing-users">Existing Users</option>
+                        <option value="power-users">Power Users</option>
+                        <option value="beta-testers">Beta Testers</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Walkthrough Steps</h3>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="addStep()">+ Add Step</button>
+                <ul class="steps-list" id="stepsList">
+                    <!-- Steps will be dynamically added here -->
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Templates</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('onboarding')">Onboarding</button>
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('feature')">Feature Tour</button>
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('update')">Update Guide</button>
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('tips')">Pro Tips</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="canvas-container">
+                <div class="canvas">
+                    <!-- Mock App Interface -->
+                    <div class="mock-app" id="mockApp">
+                        <div class="mock-header">
+                            <div style="font-weight: 600;">My App</div>
+                            <div>⚙️</div>
+                        </div>
+                        <div class="mock-content">
+                            <div class="mock-element" data-element="welcome" onclick="selectElement(this)">
+                                <strong>Welcome Dashboard</strong>
+                                <p>Get started with your new account</p>
+                            </div>
+                            <div class="mock-element" data-element="navigation" onclick="selectElement(this)">
+                                <strong>Navigation Menu</strong>
+                                <p>Access all your tools and features</p>
+                            </div>
+                            <div class="mock-element" data-element="create" onclick="selectElement(this)">
+                                <strong>Create New Project</strong>
+                                <p>Start building something amazing</p>
+                            </div>
+                            <div class="mock-element" data-element="settings" onclick="selectElement(this)">
+                                <strong>Account Settings</strong>
+                                <p>Customize your experience</p>
+                            </div>
+                            <div class="mock-element" data-element="help" onclick="selectElement(this)">
+                                <strong>Help & Support</strong>
+                                <p>Get assistance when you need it</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Properties Panel -->
+        <aside class="properties-panel" id="propertiesPanel">
+            <h3 class="sidebar-title">Step Properties</h3>
+            <div id="stepProperties">
+                <p class="text-center" style="color: var(--text-secondary); padding: 40px 0;">
+                    Select a step or element to edit its properties
+                </p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="export-panel" id="exportPanel">
+        <div class="export-modal">
+            <h2 style="margin-bottom: 20px; color: var(--primary);">Export Walkthrough</h2>
+            <div class="form-group">
+                <label class="form-label">Export Format</label>
+                <select class="form-select" id="exportFormat">
+                    <option value="json">JSON Configuration</option>
+                    <option value="react">React Component</option>
+                    <option value="vue">Vue Component</option>
+                    <option value="angular">Angular Component</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Integration Library</label>
+                <select class="form-select" id="integrationLibrary">
+                    <option value="custom">Custom Implementation</option>
+                    <option value="intro-js">Intro.js</option>
+                    <option value="shepherd">Shepherd.js</option>
+                    <option value="driver-js">Driver.js</option>
+                    <option value="reactour">Reactour</option>
+                </select>
+            </div>
+            <div class="export-code" id="exportCode"></div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeExportPanel()">Close</button>
+                <button class="btn btn-primary" onclick="copyToClipboard()">Copy Code</button>
+                <button class="btn btn-primary" onclick="downloadFile()">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let currentProject = {
+            name: 'My App Walkthrough',
+            targetAudience: 'new-users',
+            steps: [],
+            theme: {
+                primaryColor: '#FF6B35',
+                backgroundColor: '#1A1A1A',
+                textColor: '#FFFFFF'
+            }
+        };
+
+        let selectedStep = null;
+        let selectedElement = null;
+        let stepCounter = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Add some default steps
+            addStep('Welcome', 'welcome', 'Welcome to our amazing app! Let\'s get you started with a quick tour.');
+            addStep('Navigation', 'navigation', 'This is your main navigation. Use it to access different sections of the app.');
+            addStep('Create Project', 'create', 'Click here to create your first project and start building.');
+            
+            updateStepsList();
+            
+            // Auto-select first step
+            if (currentProject.steps.length > 0) {
+                selectStep(0);
+            }
+        }
+
+        function addStep(title = '', target = '', description = '') {
+            stepCounter++;
+            const step = {
+                id: `step-${stepCounter}`,
+                title: title || `Step ${stepCounter}`,
+                target: target || '',
+                description: description || 'Add a description for this step',
+                position: 'bottom',
+                highlightColor: '#FF6B35',
+                showNext: true,
+                showPrev: true,
+                showSkip: true,
+                nextText: 'Next',
+                prevText: 'Previous',
+                skipText: 'Skip Tour',
+                delay: 0,
+                animation: 'fade'
+            };
+            
+            currentProject.steps.push(step);
+            updateStepsList();
+            selectStep(currentProject.steps.length - 1);
+        }
+
+        function updateStepsList() {
+            const stepsList = document.getElementById('stepsList');
+            stepsList.innerHTML = '';
+            
+            currentProject.steps.forEach((step, index) => {
+                const li = document.createElement('li');
+                li.className = 'step-item';
+                li.onclick = () => selectStep(index);
+                
+                li.innerHTML = `
+                    <span class="step-number">${index + 1}</span>
+                    <div class="step-content">
+                        <div class="step-title">${step.title}</div>
+                        <div class="step-description">${step.description.substring(0, 50)}${step.description.length > 50 ? '...' : ''}</div>
+                    </div>
+                    <button class="step-delete" onclick="event.stopPropagation(); deleteStep(${index})">Delete</button>
+                `;
+                
+                stepsList.appendChild(li);
+            });
+        }
+
+        function selectStep(index) {
+            selectedStep = index;
+            const step = currentProject.steps[index];
+            
+            // Update visual selection
+            document.querySelectorAll('.step-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+            
+            // Highlight target element
+            highlightElement(step.target);
+            
+            // Update properties panel
+            updatePropertiesPanel(step);
+        }
+
+        function highlightElement(target) {
+            // Remove previous highlights
+            document.querySelectorAll('.mock-element').forEach(el => {
+                el.classList.remove('highlighted', 'pulse');
+            });
+            
+            // Highlight new target
+            if (target) {
+                const element = document.querySelector(`[data-element="${target}"]`);
+                if (element) {
+                    element.classList.add('highlighted', 'pulse');
+                }
+            }
+        }
+
+        function selectElement(element) {
+            const target = element.getAttribute('data-element');
+            if (selectedStep !== null) {
+                currentProject.steps[selectedStep].target = target;
+                highlightElement(target);
+                updatePropertiesPanel(currentProject.steps[selectedStep]);
+            }
+        }
+
+        function updatePropertiesPanel(step) {
+            const propertiesPanel = document.getElementById('stepProperties');
+            
+            propertiesPanel.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Step Title</label>
+                    <input type="text" class="form-input" value="${step.title}" onchange="updateStepProperty('title', this.value)">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" onchange="updateStepProperty('description', this.value)">${step.description}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Target Element</label>
+                    <select class="form-select" onchange="updateStepProperty('target', this.value)">
+                        <option value="">Select an element</option>
+                        <option value="welcome" ${step.target === 'welcome' ? 'selected' : ''}>Welcome Dashboard</option>
+                        <option value="navigation" ${step.target === 'navigation' ? 'selected' : ''}>Navigation Menu</option>
+                        <option value="create" ${step.target === 'create' ? 'selected' : ''}>Create New Project</option>
+                        <option value="settings" ${step.target === 'settings' ? 'selected' : ''}>Account Settings</option>
+                        <option value="help" ${step.target === 'help' ? 'selected' : ''}>Help & Support</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tooltip Position</label>
+                    <select class="form-select" onchange="updateStepProperty('position', this.value)">
+                        <option value="top" ${step.position === 'top' ? 'selected' : ''}>Top</option>
+                        <option value="bottom" ${step.position === 'bottom' ? 'selected' : ''}>Bottom</option>
+                        <option value="left" ${step.position === 'left' ? 'selected' : ''}>Left</option>
+                        <option value="right" ${step.position === 'right' ? 'selected' : ''}>Right</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Highlight Color</label>
+                    <div class="color-picker">
+                        <div class="color-option ${step.highlightColor === '#FF6B35' ? 'active' : ''}" style="background: #FF6B35" onclick="updateStepProperty('highlightColor', '#FF6B35')"></div>
+                        <div class="color-option ${step.highlightColor === '#2E86AB' ? 'active' : ''}" style="background: #2E86AB" onclick="updateStepProperty('highlightColor', '#2E86AB')"></div>
+                        <div class="color-option ${step.highlightColor === '#A23B72' ? 'active' : ''}" style="background: #A23B72" onclick="updateStepProperty('highlightColor', '#A23B72')"></div>
+                        <div class="color-option ${step.highlightColor === '#4CAF50' ? 'active' : ''}" style="background: #4CAF50" onclick="updateStepProperty('highlightColor', '#4CAF50')"></div>
+                        <div class="color-option ${step.highlightColor === '#FF9800' ? 'active' : ''}" style="background: #FF9800" onclick="updateStepProperty('highlightColor', '#FF9800')"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Animation</label>
+                    <select class="form-select" onchange="updateStepProperty('animation', this.value)">
+                        <option value="fade" ${step.animation === 'fade' ? 'selected' : ''}>Fade</option>
+                        <option value="slide" ${step.animation === 'slide' ? 'selected' : ''}>Slide</option>
+                        <option value="zoom" ${step.animation === 'zoom' ? 'selected' : ''}>Zoom</option>
+                        <option value="bounce" ${step.animation === 'bounce' ? 'selected' : ''}>Bounce</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Delay (ms)</label>
+                    <input type="number" class="form-input" value="${step.delay}" min="0" max="5000" step="100" onchange="updateStepProperty('delay', parseInt(this.value))">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Button Texts</label>
+                    <input type="text" class="form-input mb-2" placeholder="Next button text" value="${step.nextText}" onchange="updateStepProperty('nextText', this.value)">
+                    <input type="text" class="form-input mb-2" placeholder="Previous button text" value="${step.prevText}" onchange="updateStepProperty('prevText', this.value)">
+                    <input type="text" class="form-input" placeholder="Skip button text" value="${step.skipText}" onchange="updateStepProperty('skipText', this.value)">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Button Visibility</label>
+                    <div style="display: flex; gap: 12px; margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;">
+                            <input type="checkbox" ${step.showNext ? 'checked' : ''} onchange="updateStepProperty('showNext', this.checked)"> Next
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;">
+                            <input type="checkbox" ${step.showPrev ? 'checked' : ''} onchange="updateStepProperty('showPrev', this.checked)"> Previous
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;">
+                            <input type="checkbox" ${step.showSkip ? 'checked' : ''} onchange="updateStepProperty('showSkip', this.checked)"> Skip
+                        </label>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateStepProperty(property, value) {
+            if (selectedStep !== null) {
+                currentProject.steps[selectedStep][property] = value;
+                
+                if (property === 'title' || property === 'description') {
+                    updateStepsList();
+                }
+                
+                if (property === 'target') {
+                    highlightElement(value);
+                }
+                
+                if (property === 'highlightColor') {
+                    document.querySelectorAll('.color-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+                }
+            }
+        }
+
+        function deleteStep(index) {
+            if (confirm('Are you sure you want to delete this step?')) {
+                currentProject.steps.splice(index, 1);
+                updateStepsList();
+                
+                if (selectedStep === index) {
+                    selectedStep = null;
+                    document.getElementById('stepProperties').innerHTML = `
+                        <p class="text-center" style="color: var(--text-secondary); padding: 40px 0;">
+                            Select a step or element to edit its properties
+                        </p>
+                    `;
+                    document.querySelectorAll('.mock-element').forEach(el => {
+                        el.classList.remove('highlighted', 'pulse');
+                    });
+                } else if (selectedStep > index) {
+                    selectedStep--;
+                }
+            }
+        }
+
+        function applyTemplate(templateType) {
+            const templates = {
+                onboarding: [
+                    { title: 'Welcome!', target: 'welcome', description: 'Welcome to our platform! Let\'s get you set up with a quick tour of the key features.' },
+                    { title: 'Navigation', target: 'navigation', description: 'This is your main navigation bar. Use it to move between different sections of the app.' },
+                    { title: 'Create Your First Project', target: 'create', description: 'Ready to get started? Click here to create your very first project!' },
+                    { title: 'Settings & Preferences', target: 'settings', description: 'Customize your experience by adjusting your account settings and preferences.' },
+                    { title: 'Need Help?', target: 'help', description: 'If you ever need assistance, our help center is always available with guides and support.' }
+                ],
+                feature: [
+                    { title: 'New Feature Alert!', target: 'create', description: 'We\'ve just released an exciting new feature that will boost your productivity!' },
+                    { title: 'Enhanced Dashboard', target: 'welcome', description: 'Your dashboard now includes real-time analytics and improved widgets.' },
+                    { title: 'Updated Navigation', target: 'navigation', description: 'We\'ve streamlined the navigation for better user experience.' }
+                ],
+                update: [
+                    { title: 'What\'s New', target: 'welcome', description: 'Check out the latest updates and improvements we\'ve made to your dashboard.' },
+                    { title: 'Improved Settings', target: 'settings', description: 'We\'ve reorganized the settings panel to make configuration easier.' },
+                    { title: 'Enhanced Support', target: 'help', description: 'Our help system now includes video tutorials and live chat support.' }
+                ],
+                tips: [
+                    { title: 'Pro Tip #1', target: 'navigation', description: 'Use keyboard shortcuts Ctrl+/ to quickly access the navigation menu.' },
+                    { title: 'Pro Tip #2', target: 'create', description: 'You can duplicate existing projects to save time on similar work.' },
+                    { title: 'Pro Tip #3', target: 'settings', description: 'Enable notifications to stay updated on project changes and deadlines.' }
+                ]
+            };
+
+            if (templates[templateType]) {
+                if (confirm('This will replace your current steps. Continue?')) {
+                    currentProject.steps = [];
+                    stepCounter = 0;
+                    
+                    templates[templateType].forEach(template => {
+                        addStep(template.title, template.target, template.description);
+                    });
+                }
+            }
+        }
+
+        function previewWalkthrough() {
+            if (currentProject.steps.length === 0) {
+                alert('Please add at least one step to preview the walkthrough.');
+                return;
+            }
+            
+            // Remove any existing tooltips
+            document.querySelectorAll('.tooltip-overlay').forEach(tooltip => tooltip.remove());
+            
+            let currentStepIndex = 0;
+            
+            function showStep(index) {
+                if (index >= currentProject.steps.length) return;
+                
+                const step = currentProject.steps[index];
+                const targetElement = document.querySelector(`[data-element="${step.target}"]`);
+                
+                if (!targetElement) return;
+                
+                // Highlight target
+                document.querySelectorAll('.mock-element').forEach(el => {
+                    el.classList.remove('highlighted', 'pulse');
+                });
+                targetElement.classList.add('highlighted', 'pulse');
+                
+                // Create tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = `tooltip-overlay ${step.position} fade-in`;
+                
+                tooltip.innerHTML = `
+                    <div class="tooltip-title">${step.title}</div>
+                    <div class="tooltip-description">${step.description}</div>
+                    <div class="tooltip-actions">
+                        ${step.showSkip ? `<button class="btn btn-secondary btn-small" onclick="endPreview()">${step.skipText}</button>` : ''}
+                        ${step.showPrev && index > 0 ? `<button class="btn btn-secondary btn-small" onclick="showPrevStep()">${step.prevText}</button>` : ''}
+                        ${step.showNext ? `<button class="btn btn-primary btn-small" onclick="showNextStep()">${index === currentProject.steps.length - 1 ? 'Finish' : step.nextText}</button>` : ''}
+                    </div>
+                `;
+                
+                // Position tooltip
+                const rect = targetElement.getBoundingClientRect();
+                const mockAppRect = document.getElementById('mockApp').getBoundingClientRect();
+                
+                let top, left;
+                switch (step.position) {
+                    case 'top':
+                        top = rect.top - mockAppRect.top - 120;
+                        left = rect.left - mockAppRect.left;
+                        break;
+                    case 'bottom':
+                        top = rect.bottom - mockAppRect.top + 10;
+                        left = rect.left - mockAppRect.left;
+                        break;
+                    case 'left':
+                        top = rect.top - mockAppRect.top;
+                        left = rect.left - mockAppRect.left - 300;
+                        break;
+                    case 'right':
+                        top = rect.top - mockAppRect.top;
+                        left = rect.right - mockAppRect.left + 10;
+                        break;
+                }
+                
+                tooltip.style.top = `${Math.max(10, top)}px`;
+                tooltip.style.left = `${Math.max(10, left)}px`;
+                
+                document.getElementById('mockApp').appendChild(tooltip);
+                
+                // Global functions for navigation
+                window.showNextStep = () => {
+                    tooltip.remove();
+                    if (index === currentProject.steps.length - 1) {
+                        endPreview();
+                    } else {
+                        setTimeout(() => showStep(index + 1), step.delay);
+                    }
+                };
+                
+                window.showPrevStep = () => {
+                    tooltip.remove();
+                    showStep(index - 1);
+                };
+            }
+            
+            window.endPreview = () => {
+                document.querySelectorAll('.tooltip-overlay').forEach(tooltip => tooltip.remove());
+                document.querySelectorAll('.mock-element').forEach(el => {
+                    el.classList.remove('highlighted', 'pulse');
+                });
+                if (selectedStep !== null) {
+                    highlightElement(currentProject.steps[selectedStep].target);
+                }
+            };
+            
+            showStep(0);
+        }
+
+        function exportWalkthrough() {
+            const exportPanel = document.getElementById('exportPanel');
+            const exportCode = document.getElementById('exportCode');
+            const exportFormat = document.getElementById('exportFormat');
+            const integrationLibrary = document.getElementById('integrationLibrary');
+            
+            exportPanel.style.display = 'flex';
+            generateExportCode();
+            
+            exportFormat.onchange = generateExportCode;
+            integrationLibrary.onchange = generateExportCode;
+        }
+
+        function generateExportCode() {
+            const format = document.getElementById('exportFormat').value;
+            const library = document.getElementById('integrationLibrary').value;
+            const exportCode = document.getElementById('exportCode');
+            
+            let code = '';
+            
+            switch (format) {
+                case 'json':
+                    code = JSON.stringify({
+                        project: currentProject,
+                        metadata: {
+                            version: '1.0.0',
+                            createdAt: new Date().toISOString(),
+                            library: library
+                        }
+                    }, null, 2);
+                    break;
+                    
+                case 'react':
+                    code = generateReactComponent(library);
+                    break;
+                    
+                case 'vue':
+                    code = generateVueComponent(library);
+                    break;
+                    
+                case 'angular':
+                    code = generateAngularComponent(library);
+                    break;
+            }
+            
+            exportCode.textContent = code;
+        }
+
+        function generateReactComponent(library) {
+            const stepsConfig = JSON.stringify(currentProject.steps, null, 2);
+            
+            return `import React, { useState, useEffect } from 'react';
+${library === 'intro-js' ? "import introJs from 'intro.js';" : ''}
+${library === 'shepherd' ? "import Shepherd from 'shepherd.js';" : ''}
+${library === 'driver-js' ? "import { driver } from 'driver.js';" : ''}
+
+const AppWalkthrough = ({ isActive = false, onComplete = () => {} }) => {
+  const [currentStep, setCurrentStep] = useState(0);
+  
+  const steps = ${stepsConfig};
+  
+  useEffect(() => {
+    if (isActive) {
+      ${library === 'intro-js' ? 'startIntroJsTour();' : ''}
+      ${library === 'shepherd' ? 'startShepherdTour();' : ''}
+      ${library === 'driver-js' ? 'startDriverTour();' : ''}
+      ${library === 'custom' ? 'startCustomTour();' : ''}
+    }
+  }, [isActive]);
+  
+  ${library === 'intro-js' ? `
+  const startIntroJsTour = () => {
+    const tour = introJs();
+    tour.setOptions({
+      steps: steps.map(step => ({
+        element: \`[data-element="\${step.target}"]\`,
+        intro: \`<strong>\${step.title}</strong><br>\${step.description}\`,
+        position: step.position
+      }))
+    });
+    tour.start();
+    tour.oncomplete(onComplete);
+  };` : ''}
+  
+  ${library === 'custom' ? `
+  const startCustomTour = () => {
+    // Custom walkthrough implementation
+    console.log('Starting custom tour with steps:', steps);
+    // Add your custom tour logic here
+  };` : ''}
+  
+  return null; // This component handles the tour logic
+};
+
+export default AppWalkthrough;
+
+// Usage:
+// <AppWalkthrough 
+//   isActive={showTour} 
+//   onComplete={() => setShowTour(false)} 
+// />`;
+        }
+
+        function generateVueComponent(library) {
+            const stepsConfig = JSON.stringify(currentProject.steps, null, 2);
+            
+            return `<template>
+  <div v-if="isActive" class="walkthrough-container">
+    <!-- Vue walkthrough implementation -->
+  </div>
+</template>
+
+<script>
+${library === 'intro-js' ? "import introJs from 'intro.js';" : ''}
+
+export default {
+  name: 'AppWalkthrough',
+  props: {
+    isActive: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      steps: ${stepsConfig},
+      currentStep: 0
+    };
+  },
+  watch: {
+    isActive(newVal) {
+      if (newVal) {
+        this.startTour();
+      }
+    }
+  },
+  methods: {
+    startTour() {
+      ${library === 'intro-js' ? `
+      const tour = introJs();
+      tour.setOptions({
+        steps: this.steps.map(step => ({
+          element: \`[data-element="\${step.target}"]\`,
+          intro: \`<strong>\${step.title}</strong><br>\${step.description}\`,
+          position: step.position
+        }))
+      });
+      tour.start();
+      tour.oncomplete(() => this.$emit('complete'));` : `
+      // Custom tour implementation
+      console.log('Starting tour with steps:', this.steps);`}
+    }
+  }
+};
+</script>`;
+        }
+
+        function generateAngularComponent(library) {
+            const stepsConfig = JSON.stringify(currentProject.steps, null, 2);
+            
+            return `import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+${library === 'intro-js' ? "import * as introJs from 'intro.js';" : ''}
+
+@Component({
+  selector: 'app-walkthrough',
+  template: \`
+    <div *ngIf="isActive" class="walkthrough-container">
+      <!-- Angular walkthrough implementation -->
+    </div>
+  \`
+})
+export class AppWalkthroughComponent implements OnChanges {
+  @Input() isActive: boolean = false;
+  @Output() complete = new EventEmitter<void>();
+  
+  private steps = ${stepsConfig};
+  private currentStep = 0;
+  
+  ngOnChanges() {
+    if (this.isActive) {
+      this.startTour();
+    }
+  }
+  
+  private startTour() {
+    ${library === 'intro-js' ? `
+    const tour = introJs();
+    tour.setOptions({
+      steps: this.steps.map(step => ({
+        element: \`[data-element="\${step.target}"]\`,
+        intro: \`<strong>\${step.title}</strong><br>\${step.description}\`,
+        position: step.position
+      }))
+    });
+    tour.start();
+    tour.oncomplete(() => this.complete.emit());` : `
+    // Custom tour implementation
+    console.log('Starting tour with steps:', this.steps);`}
+  }
+}`;
+        }
+
+        function closeExportPanel() {
+            document.getElementById('exportPanel').style.display = 'none';
+        }
+
+        function copyToClipboard() {
+            const exportCode = document.getElementById('exportCode');
+            navigator.clipboard.writeText(exportCode.textContent).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = 'var(--success)';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+
+        function downloadFile() {
+            const exportCode = document.getElementById('exportCode');
+            const format = document.getElementById('exportFormat').value;
+            const projectName = currentProject.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            
+            const extensions = {
+                json: 'json',
+                react: 'jsx',
+                vue: 'vue',
+                angular: 'ts'
+            };
+            
+            const filename = `${projectName}_walkthrough.${extensions[format]}`;
+            const blob = new Blob([exportCode.textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function saveProject() {
+            const projectData = {
+                ...currentProject,
+                savedAt: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(projectData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentProject.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_project.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Show success message
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Saved!';
+            btn.style.background = 'var(--success)';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        // Update project name when changed
+        document.getElementById('projectName').addEventListener('input', function() {
+            currentProject.name = this.value;
+        });
+
+        // Update target audience when changed
+        document.getElementById('targetAudience').addEventListener('change', function() {
+            currentProject.targetAudience = this.value;
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveProject();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportWalkthrough();
+                        break;
+                    case 'p':
+                        e.preventDefault();
+                        previewWalkthrough();
+                        break;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                closeExportPanel();
+                if (window.endPreview) {
+                    window.endPreview();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
