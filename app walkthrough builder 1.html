@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Walkthrough Builder Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #E55A2B;
+            --secondary: #2E86AB;
+            --accent: #A23B72;
+            --bg-dark: #1A1A1A;
+            --bg-medium: #2A2A2A;
+            --bg-light: #3A3A3A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --border: #404040;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-medium) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg-medium) 100%);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo::before {
+            content: "◉";
+            margin-right: 8px;
+            font-size: 24px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: var(--bg-medium);
+            border-right: 1px solid var(--border);
+            padding: 80px 20px 20px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-title::before {
+            content: "";
+            width: 3px;
+            height: 12px;
+            background: var(--primary);
+            margin-right: 8px;
+            border-radius: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 60px;
+        }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, rgba(255, 107, 53, 0.03) 0%, transparent 70%);
+            overflow: hidden;
+        }
+
+        .canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.05) 2px, transparent 0),
+                radial-gradient(circle at 75px 75px, rgba(255, 107, 53, 0.05) 1px, transparent 0);
+            background-size: 100px 100px;
+        }
+
+        /* Mock App Interface */
+        .mock-app {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 600px;
+            background: linear-gradient(145deg, #FFFFFF 0%, #F5F5F5 100%);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--shadow);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mock-header {
+            height: 60px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: white;
+        }
+
+        .mock-content {
+            padding: 20px;
+            color: #333;
+        }
+
+        .mock-element {
+            padding: 12px;
+            margin: 10px 0;
+            background: #F8F9FA;
+            border-radius: 8px;
+            border: 1px solid #E9ECEF;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .mock-element:hover {
+            background: #E9ECEF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .mock-element.highlighted {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Tooltip Overlay */
+        .tooltip-overlay {
+            position: absolute;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px var(--shadow);
+            max-width: 280px;
+            z-index: 1000;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .tooltip-overlay::before {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            transform: rotate(45deg);
+            border-bottom: none;
+            border-right: none;
+        }
+
+        .tooltip-overlay.bottom::before {
+            top: -6px;
+            left: 20px;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .tooltip-description {
+            font-size: 14px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .tooltip-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Steps List */
+        .steps-list {
+            list-style: none;
+        }
+
+        .step-item {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .step-item:hover {
+            background: var(--bg-medium);
+            transform: translateX(4px);
+        }
+
+        .step-item.active {
+            border-color: var(--primary);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .step-content {
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        .step-title {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .step-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Properties Panel */
+        .properties-panel {
+            background: var(--bg-medium);
+            border-left: 1px solid var(--border);
+            width: 300px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Color Picker */
+        .color-picker {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Export Panel */
+        .export-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+        }
+
+        .export-modal {
+            background: var(--bg-medium);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+        }
+
+        .export-code {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 300px;
+            margin: 16px 0;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 107, 53, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(255, 107, 53, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 280px;
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .properties-panel {
+                width: 250px;
+            }
+            
+            .mock-app {
+                width: 300px;
+                height: 500px;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden { display: none !important; }
+        .fade-in { animation: slideIn 0.5s ease; }
+        .text-center { text-align: center; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-3 { margin-bottom: 12px; }
+        .mt-3 { margin-top: 12px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">Walkthrough Builder Pro</div>
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-small" onclick="previewWalkthrough()">Preview</button>
+                <button class="btn btn-primary btn-small" onclick="exportWalkthrough()">Export JSON</button>
+                <button class="btn btn-secondary btn-small" onclick="saveProject()">Save Project</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Project Settings</h3>
+                <div class="form-group">
+                    <label class="form-label">Project Name</label>
+                    <input type="text" class="form-input" id="projectName" value="My App Walkthrough" placeholder="Enter project name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Target Audience</label>
+                    <select class="form-select" id="targetAudience">
+                        <option value="new-users">New Users</option>
+                        <option value="existing-users">Existing Users</option>
+                        <option value="power-users">Power Users</option>
+                        <option value="beta-testers">Beta Testers</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Walkthrough Steps</h3>
+                <button class="btn btn-primary" style="width: 100%; margin-bottom: 15px;" onclick="addStep()">+ Add Step</button>
+                <ul class="steps-list" id="stepsList">
+                    <!-- Steps will be dynamically added here -->
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Templates</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('onboarding')">Onboarding</button>
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('feature')">Feature Tour</button>
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('update')">Update Guide</button>
+                    <button class="btn btn-secondary btn-small" onclick="applyTemplate('tips')">Pro Tips</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="canvas-container">
+                <div class="canvas">
+                    <!-- Mock App Interface -->
+                    <div class="mock-app" id="mockApp">
+                        <div class="mock-header">
+                            <div style="font-weight: 600;">My App</div>
+                            <div>⚙️</div>
+                        </div>
+                        <div class="mock-content">
+                            <div class="mock-element" data-element="welcome" onclick="selectElement(this)">
+                                <strong>Welcome Dashboard</strong>
+                                <p>Get started with your new account</p>
+                            </div>
+                            <div class="mock-element" data-element="navigation" onclick="selectElement(this)">
+                                <strong>Navigation Menu</strong>
+                                <p>Access all your tools and features</p>
+                            </div>
+                            <div class="mock-element" data-element="create" onclick="selectElement(this)">
+                                <strong>Create New Project</strong>
+                                <p>Start building something amazing</p>
+                            </div>
+                            <div class="mock-element" data-element="settings" onclick="selectElement(this)">
+                                <strong>Account Settings</strong>
+                                <p>Customize your experience</p>
+                            </div>
+                            <div class="mock-element" data-element="help" onclick="selectElement(this)">
+                                <strong>Help & Support</strong>
+                                <p>Get assistance when you need it</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Properties Panel -->
+        <aside class="properties-panel" id="propertiesPanel">
+            <h3 class="sidebar-title">Step Properties</h3>
+            <div id="stepProperties">
+                <p class="text-center" style="color: var(--text-secondary); padding: 40px 0;">
+                    Select a step or element to edit its properties
+                </p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="export-panel" id="exportPanel">
+        <div class="export-modal">
+            <h2 style="margin-bottom: 20px; color: var(--primary);">Export Walkthrough</h2>
+            <div class="form-group">
+                <label class="form-label">Export Format</label>
+                <select class="form-select" id="exportFormat">
+                    <option value="json">JSON Configuration</option>
+                    <option value="react">React Component</option>
+                    <option value="vue">Vue Component</option>
+                    <option value="angular">Angular Component</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Integration Library</label>
+                <select class="form-select" id="integrationLibrary">
+                    <option value="custom">Custom Implementation</option>
+                    <option value="intro-js">Intro.js</option>
+                    <option value="shepherd">Shepherd.js</option>
+                    <option value="driver-js">Driver.js</option>
+                    <option value="reactour">Reactour</option>
+                </select>
+            </div>
+            <div class="export-code" id="exportCode"></div>
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-secondary" onclick="closeExportPanel()">Close</button>
+                <button class="btn btn-primary" onclick="copyToClipboard()">Copy Code</button>
+                <button class="btn btn-primary" onclick="downloadFile()">Download</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global State
+        let currentProject = {
+            name: 'My App Walkthrough',
+            targetAudience: 'new-users',
+            steps: [],
+            theme: {
+                primaryColor: '#FF6B35',
+                backgroundColor: '#1A1A1A',
+                textColor: '#FFFFFF'
+            }
+        };
+
+        let selectedStep = null;
+        let selectedElement = null;
+        let stepCounter = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Add some default steps
+            addStep('Welcome', 'welcome', 'Welcome to our amazing app! Let\'s get you started with a quick tour.');
+            addStep('Navigation', 'navigation', 'This is your main navigation. Use it to access different sections of the app.');
+            addStep('Create Project', 'create', 'Click here to create your first project and start building.');
+            
+            updateStepsList();
+            
+            // Auto-select first step
+            if (currentProject.steps.length > 0) {
+                selectStep(0);
+            }
+        }
+
+        function addStep(title = '', target = '', description = '') {
+            stepCounter++;
+            const step = {
+                id: `step-${stepCounter}`,
+                title: title || `Step ${stepCounter}`,
+                target: target || '',
+                description: description || 'Add a description for this step',
+                position: 'bottom',
+                highlightColor: '#FF6B35',
+                showNext: true,
+                showPrev: true,
+                showSkip: true,
+                nextText: 'Next',
+                prevText: 'Previous',
+                skipText: 'Skip Tour',
+                delay: 0,
+                animation: 'fade'
+            };
+            
+            currentProject.steps.push(step);
+            updateStepsList();
+            selectStep(currentProject.steps.length - 1);
+        }
+
+        function updateStepsList() {
+            const stepsList = document.getElementById('stepsList');
+            stepsList.innerHTML = '';
+            
+            currentProject.steps.forEach((step, index) => {
+                const li = document.createElement('li');
+                li.className = 'step-item';
+                li.onclick = () => selectStep(index);
+                
+                li.innerHTML = `
+                    <span class="step-number">${index + 1}</span>
+                    <div class="step-content">
+                        <div class="step-title">${step.title}</div>
+                        <div class="step-description">${step.description.substring(0, 50)}${step.description.length > 50 ? '...' : ''}</div>
+                    </div>
+                    <button class="btn btn-secondary btn-small" style="float: right; margin-top: 4px;" onclick="event.stopPropagation(); deleteStep(${index})">×</button>
+                `;
+                
+                stepsList.appendChild(li);
+            });
+        }
+
+        function selectStep(index) {
+            selectedStep = index;
+            const step = currentProject.steps[index];
+            
+            // Update visual selection
+            document.querySelectorAll('.step-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+            
+            // Highlight target element
+            highlightElement(step.target);
+            
+            // Update properties panel
+            updatePropertiesPanel(step);
+        }
+
+        function highlightElement(target) {
+            // Remove previous highlights
+            document.querySelectorAll('.mock-element').forEach(el => {
+                el.classList.remove('highlighted', 'pulse');
+            });
+            
+            // Highlight new target
+            if (target) {
+                const element = document.querySelector(`[data-element="${target}"]`);
+                if (element) {
+                    element.classList.add('highlighted', 'pulse');
+                }
+            }
+        }
+
+        function selectElement(element) {
+            const target = element.getAttribute('data-element');
+            if (selectedStep !== null) {
+                currentProject.steps[selectedStep].target = target;
+                highlightElement(target);
+                updatePropertiesPanel(currentProject.steps[selectedStep]);
+            }
+        }
+
+        function updatePropertiesPanel(step) {
+            const propertiesPanel = document.getElementById('stepProperties');
+            
+            propertiesPanel.innerHTML = `
+                <div class="form-group">
+                    <label class="form-label">Step Title</label>
+                    <input type="text" class="form-input" value="${step.title}" onchange="updateStepProperty('title', this.value)">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" onchange="updateStepProperty('description', this.value)">${step.description}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Target Element</label>
+                    <select class="form-select" onchange="updateStepProperty('target', this.value)">
+                        <option value="">Select an element</option>
+                        <option value="welcome" ${step.target === 'welcome' ? 'selected' : ''}>Welcome Dashboard</option>
+                        <option value="navigation" ${step.target === 'navigation' ? 'selected' : ''}>Navigation Menu</option>
+                        <option value="create" ${step.target === 'create' ? 'selected' : ''}>Create New Project</option>
+                        <option value="settings" ${step.target === 'settings' ? 'selected' : ''}>Account Settings</option>
+                        <option value="help" ${step.target === 'help' ? 'selected' : ''}>Help & Support</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tooltip Position</label>
+                    <select class="form-select" onchange="updateStepProperty('position', this.value)">
+                        <option value="top" ${step.position === 'top' ? 'selected' : ''}>Top</option>
+                        <option value="bottom" ${step.position === 'bottom' ? 'selected' : ''}>Bottom</option>
+                        <option value="left" ${step.position === 'left' ? 'selected' : ''}>Left</option>
+                        <option value="right" ${step.position === 'right' ? 'selected' : ''}>Right</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Highlight Color</label>
+                    <div class="color-picker">
+                        <div class="color-option ${step.highlightColor === '#FF6B35' ? 'active' : ''}" style="background: #FF6B35" onclick="updateStepProperty('highlightColor', '#FF6B35')"></div>
+                        <div class="color-option ${step.highlightColor === '#2E86AB' ? 'active' : ''}" style="background: #2E86AB" onclick="updateStepProperty('highlightColor', '#2E86AB')"></div>
+                        <div class="color-option ${step.highlightColor === '#A23B72' ? 'active' : ''}" style="background: #A23B72" onclick="updateStepProperty('highlightColor', '#A23B72')"></div>
+                        <div class="color-option ${step.highlightColor === '#4CAF50' ? 'active' : ''}" style="background: #4CAF50" onclick="updateStepProperty('highlightColor', '#4CAF50')"></div>
+                        <div class="color-option ${step.highlightColor === '#FF9800' ? 'active' : ''}" style="background: #FF9800" onclick="updateStepProperty('highlightColor', '#FF9800')"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Animation</label>
+                    <select class="form-select" onchange="updateStepProperty('animation', this.value)">
+                        <option value="fade" ${step.animation === 'fade' ? 'selected' : ''}>Fade</option>
+                        <option value="slide" ${step.animation === 'slide' ? 'selected' : ''}>Slide</option>
+                        <option value="zoom" ${step.animation === 'zoom' ? 'selected' : ''}>Zoom</option>
+                        <option value="bounce" ${step.animation === 'bounce' ? 'selected' : ''}>Bounce</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Delay (ms)</label>
+                    <input type="number" class="form-input" value="${step.delay}" min="0" max="5000" step="100" onchange="updateStepProperty('delay', parseInt(this.value))">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Button Texts</label>
+                    <input type="text" class="form-input mb-2" placeholder="Next button text" value="${step.nextText}" onchange="updateStepProperty('nextText', this.value)">
+                    <input type="text" class="form-input mb-2" placeholder="Previous button text" value="${step.prevText}" onchange="updateStepProperty('prevText', this.value)">
+                    <input type="text" class="form-input" placeholder="Skip button text" value="${step.skipText}" onchange="updateStepProperty('skipText', this.value)">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Button Visibility</label>
+                    <div style="display: flex; gap: 12px; margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;">
+                            <input type="checkbox" ${step.showNext ? 'checked' : ''} onchange="updateStepProperty('showNext', this.checked)"> Next
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;">
+                            <input type="checkbox" ${step.showPrev ? 'checked' : ''} onchange="updateStepProperty('showPrev', this.checked)"> Previous
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; font-size: 13px;">
+                            <input type="checkbox" ${step.showSkip ? 'checked' : ''} onchange="updateStepProperty('showSkip', this.checked)"> Skip
+                        </label>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateStepProperty(property, value) {
+            if (selectedStep !== null) {
+                currentProject.steps[selectedStep][property] = value;
+                
+                if (property === 'title' || property === 'description') {
+                    updateStepsList();
+                }
+                
+                if (property === 'target') {
+                    highlightElement(value);
+                }
+                
+                if (property === 'highlightColor') {
+                    document.querySelectorAll('.color-option').forEach(option => {
+                        option.classList.remove('active');
+                    });
+                    event.target.classList.add('active');
+                }
+            }
+        }
+
+        function deleteStep(index) {
+            if (confirm('Are you sure you want to delete this step?')) {
+                currentProject.steps.splice(index, 1);
+                updateStepsList();
+                
+                if (selectedStep === index) {
+                    selectedStep = null;
+                    document.getElementById('stepProperties').innerHTML = `
+                        <p class="text-center" style="color: var(--text-secondary); padding: 40px 0;">
+                            Select a step or element to edit its properties
+                        </p>
+                    `;
+                    document.querySelectorAll('.mock-element').forEach(el => {
+                        el.classList.remove('highlighted', 'pulse');
+                    });
+                } else if (selectedStep > index) {
+                    selectedStep--;
+                }
+            }
+        }
+
+        function applyTemplate(templateType) {
+            const templates = {
+                onboarding: [
+                    { title: 'Welcome!', target: 'welcome', description: 'Welcome to our platform! Let\'s get you set up with a quick tour of the key features.' },
+                    { title: 'Navigation', target: 'navigation', description: 'This is your main navigation bar. Use it to move between different sections of the app.' },
+                    { title: 'Create Your First Project', target: 'create', description: 'Ready to get started? Click here to create your very first project!' },
+                    { title: 'Settings & Preferences', target: 'settings', description: 'Customize your experience by adjusting your account settings and preferences.' },
+                    { title: 'Need Help?', target: 'help', description: 'If you ever need assistance, our help center is always available with guides and support.' }
+                ],
+                feature: [
+                    { title: 'New Feature Alert!', target: 'create', description: 'We\'ve just released an exciting new feature that will boost your productivity!' },
+                    { title: 'Enhanced Dashboard', target: 'welcome', description: 'Your dashboard now includes real-time analytics and improved widgets.' },
+                    { title: 'Updated Navigation', target: 'navigation', description: 'We\'ve streamlined the navigation for better user experience.' }
+                ],
+                update: [
+                    { title: 'What\'s New', target: 'welcome', description: 'Check out the latest updates and improvements we\'ve made to your dashboard.' },
+                    { title: 'Improved Settings', target: 'settings', description: 'We\'ve reorganized the settings panel to make configuration easier.' },
+                    { title: 'Enhanced Support', target: 'help', description: 'Our help system now includes video tutorials and live chat support.' }
+                ],
+                tips: [
+                    { title: 'Pro Tip #1', target: 'navigation', description: 'Use keyboard shortcuts Ctrl+/ to quickly access the navigation menu.' },
+                    { title: 'Pro Tip #2', target: 'create', description: 'You can duplicate existing projects to save time on similar work.' },
+                    { title: 'Pro Tip #3', target: 'settings', description: 'Enable notifications to stay updated on project changes and deadlines.' }
+                ]
+            };
+
+            if (templates[templateType]) {
+                if (confirm('This will replace your current steps. Continue?')) {
+                    currentProject.steps = [];
+                    stepCounter = 0;
+                    
+                    templates[templateType].forEach(template => {
+                        addStep(template.title, template.target, template.description);
+                    });
+                }
+            }
+        }
+
+        function previewWalkthrough() {
+            if (currentProject.steps.length === 0) {
+                alert('Please add at least one step to preview the walkthrough.');
+                return;
+            }
+            
+            // Remove any existing tooltips
+            document.querySelectorAll('.tooltip-overlay').forEach(tooltip => tooltip.remove());
+            
+            let currentStepIndex = 0;
+            
+            function showStep(index) {
+                if (index >= currentProject.steps.length) return;
+                
+                const step = currentProject.steps[index];
+                const targetElement = document.querySelector(`[data-element="${step.target}"]`);
+                
+                if (!targetElement) return;
+                
+                // Highlight target
+                document.querySelectorAll('.mock-element').forEach(el => {
+                    el.classList.remove('highlighted', 'pulse');
+                });
+                targetElement.classList.add('highlighted', 'pulse');
+                
+                // Create tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = `tooltip-overlay ${step.position} fade-in`;
+                
+                tooltip.innerHTML = `
+                    <div class="tooltip-title">${step.title}</div>
+                    <div class="tooltip-description">${step.description}</div>
+                    <div class="tooltip-actions">
+                        ${step.showSkip ? `<button class="btn btn-secondary btn-small" onclick="endPreview()">${step.skipText}</button>` : ''}
+                        ${step.showPrev && index > 0 ? `<button class="btn btn-secondary btn-small" onclick="showPrevStep()">${step.prevText}</button>` : ''}
+                        ${step.showNext ? `<button class="btn btn-primary btn-small" onclick="showNextStep()">${index === currentProject.steps.length - 1 ? 'Finish' : step.nextText}</button>` : ''}
+                    </div>
+                `;
+                
+                // Position tooltip
+                const rect = targetElement.getBoundingClientRect();
+                const mockAppRect = document.getElementById('mockApp').getBoundingClientRect();
+                
+                let top, left;
+                switch (step.position) {
+                    case 'top':
+                        top = rect.top - mockAppRect.top - 120;
+                        left = rect.left - mockAppRect.left;
+                        break;
+                    case 'bottom':
+                        top = rect.bottom - mockAppRect.top + 10;
+                        left = rect.left - mockAppRect.left;
+                        break;
+                    case 'left':
+                        top = rect.top - mockAppRect.top;
+                        left = rect.left - mockAppRect.left - 300;
+                        break;
+                    case 'right':
+                        top = rect.top - mockAppRect.top;
+                        left = rect.right - mockAppRect.left + 10;
+                        break;
+                }
+                
+                tooltip.style.top = `${Math.max(10, top)}px`;
+                tooltip.style.left = `${Math.max(10, left)}px`;
+                
+                document.getElementById('mockApp').appendChild(tooltip);
+                
+                // Global functions for navigation
+                window.showNextStep = () => {
+                    tooltip.remove();
+                    if (index === currentProject.steps.length - 1) {
+                        endPreview();
+                    } else {
+                        setTimeout(() => showStep(index + 1), step.delay);
+                    }
+                };
+                
+                window.showPrevStep = () => {
+                    tooltip.remove();
+                    showStep(index - 1);
+                };
+            }
+            
+            window.endPreview = () => {
+                document.querySelectorAll('.tooltip-overlay').forEach(tooltip => tooltip.remove());
+                document.querySelectorAll('.mock-element').forEach(el => {
+                    el.classList.remove('highlighted', 'pulse');
+                });
+                if (selectedStep !== null) {
+                    highlightElement(currentProject.steps[selectedStep].target);
+                }
+            };
+            
+            showStep(0);
+        }
+
+        function exportWalkthrough() {
+            const exportPanel = document.getElementById('exportPanel');
+            const exportCode = document.getElementById('exportCode');
+            const exportFormat = document.getElementById('exportFormat');
+            const integrationLibrary = document.getElementById('integrationLibrary');
+            
+            exportPanel.style.display = 'flex';
+            generateExportCode();
+            
+            exportFormat.onchange = generateExportCode;
+            integrationLibrary.onchange = generateExportCode;
+        }
+
+        function generateExportCode() {
+            const format = document.getElementById('exportFormat').value;
+            const library = document.getElementById('integrationLibrary').value;
+            const exportCode = document.getElementById('exportCode');
+            
+            let code = '';
+            
+            switch (format) {
+                case 'json':
+                    code = JSON.stringify({
+                        project: currentProject,
+                        metadata: {
+                            version: '1.0.0',
+                            createdAt: new Date().toISOString(),
+                            library: library
+                        }
+                    }, null, 2);
+                    break;
+                    
+                case 'react':
+                    code = generateReactComponent(library);
+                    break;
+                    
+                case 'vue':
+                    code = generateVueComponent(library);
+                    break;
+                    
+                case 'angular':
+                    code = generateAngularComponent(library);
+                    break;
+            }
+            
+            exportCode.textContent = code;
+        }
+
+        function generateReactComponent(library) {
+            const stepsConfig = JSON.stringify(currentProject.steps, null, 2);
+            
+            return `import React, { useState, useEffect } from 'react';
+${library === 'intro-js' ? "import introJs from 'intro.js';" : ''}
+${library === 'shepherd' ? "import Shepherd from 'shepherd.js';" : ''}
+${library === 'driver-js' ? "import { driver } from 'driver.js';" : ''}
+
+const AppWalkthrough = ({ isActive = false, onComplete = () => {} }) => {
+  const [currentStep, setCurrentStep] = useState(0);
+  
+  const steps = ${stepsConfig};
+  
+  useEffect(() => {
+    if (isActive) {
+      ${library === 'intro-js' ? 'startIntroJsTour();' : ''}
+      ${library === 'shepherd' ? 'startShepherdTour();' : ''}
+      ${library === 'driver-js' ? 'startDriverTour();' : ''}
+      ${library === 'custom' ? 'startCustomTour();' : ''}
+    }
+  }, [isActive]);
+  
+  ${library === 'intro-js' ? `
+  const startIntroJsTour = () => {
+    const tour = introJs();
+    tour.setOptions({
+      steps: steps.map(step => ({
+        element: \`[data-element="\${step.target}"]\`,
+        intro: \`<strong>\${step.title}</strong><br>\${step.description}\`,
+        position: step.position
+      }))
+    });
+    tour.start();
+    tour.oncomplete(onComplete);
+  };` : ''}
+  
+  ${library === 'custom' ? `
+  const startCustomTour = () => {
+    // Custom walkthrough implementation
+    console.log('Starting custom tour with steps:', steps);
+    // Add your custom tour logic here
+  };` : ''}
+  
+  return null; // This component handles the tour logic
+};
+
+export default AppWalkthrough;
+
+// Usage:
+// <AppWalkthrough 
+//   isActive={showTour} 
+//   onComplete={() => setShowTour(false)} 
+// />`;
+        }
+
+        function generateVueComponent(library) {
+            const stepsConfig = JSON.stringify(currentProject.steps, null, 2);
+            
+            return `<template>
+  <div v-if="isActive" class="walkthrough-container">
+    <!-- Vue walkthrough implementation -->
+  </div>
+</template>
+
+<script>
+${library === 'intro-js' ? "import introJs from 'intro.js';" : ''}
+
+export default {
+  name: 'AppWalkthrough',
+  props: {
+    isActive: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    return {
+      steps: ${stepsConfig},
+      currentStep: 0
+    };
+  },
+  watch: {
+    isActive(newVal) {
+      if (newVal) {
+        this.startTour();
+      }
+    }
+  },
+  methods: {
+    startTour() {
+      ${library === 'intro-js' ? `
+      const tour = introJs();
+      tour.setOptions({
+        steps: this.steps.map(step => ({
+          element: \`[data-element="\${step.target}"]\`,
+          intro: \`<strong>\${step.title}</strong><br>\${step.description}\`,
+          position: step.position
+        }))
+      });
+      tour.start();
+      tour.oncomplete(() => this.$emit('complete'));` : `
+      // Custom tour implementation
+      console.log('Starting tour with steps:', this.steps);`}
+    }
+  }
+};
+</script>`;
+        }
+
+        function generateAngularComponent(library) {
+            const stepsConfig = JSON.stringify(currentProject.steps, null, 2);
+            
+            return `import { Component, Input, OnChanges, Output, EventEmitter } from '@angular/core';
+${library === 'intro-js' ? "import * as introJs from 'intro.js';" : ''}
+
+@Component({
+  selector: 'app-walkthrough',
+  template: \`
+    <div *ngIf="isActive" class="walkthrough-container">
+      <!-- Angular walkthrough implementation -->
+    </div>
+  \`
+})
+export class AppWalkthroughComponent implements OnChanges {
+  @Input() isActive: boolean = false;
+  @Output() complete = new EventEmitter<void>();
+  
+  private steps = ${stepsConfig};
+  private currentStep = 0;
+  
+  ngOnChanges() {
+    if (this.isActive) {
+      this.startTour();
+    }
+  }
+  
+  private startTour() {
+    ${library === 'intro-js' ? `
+    const tour = introJs();
+    tour.setOptions({
+      steps: this.steps.map(step => ({
+        element: \`[data-element="\${step.target}"]\`,
+        intro: \`<strong>\${step.title}</strong><br>\${step.description}\`,
+        position: step.position
+      }))
+    });
+    tour.start();
+    tour.oncomplete(() => this.complete.emit());` : `
+    // Custom tour implementation
+    console.log('Starting tour with steps:', this.steps);`}
+  }
+}`;
+        }
+
+        function closeExportPanel() {
+            document.getElementById('exportPanel').style.display = 'none';
+        }
+
+        function copyToClipboard() {
+            const exportCode = document.getElementById('exportCode');
+            navigator.clipboard.writeText(exportCode.textContent).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = 'var(--success)';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+
+        function downloadFile() {
+            const exportCode = document.getElementById('exportCode');
+            const format = document.getElementById('exportFormat').value;
+            const projectName = currentProject.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            
+            const extensions = {
+                json: 'json',
+                react: 'jsx',
+                vue: 'vue',
+                angular: 'ts'
+            };
+            
+            const filename = `${projectName}_walkthrough.${extensions[format]}`;
+            const blob = new Blob([exportCode.textContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function saveProject() {
+            const projectData = {
+                ...currentProject,
+                savedAt: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(projectData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentProject.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_project.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Show success message
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Saved!';
+            btn.style.background = 'var(--success)';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        // Update project name when changed
+        document.getElementById('projectName').addEventListener('input', function() {
+            currentProject.name = this.value;
+        });
+
+        // Update target audience when changed
+        document.getElementById('targetAudience').addEventListener('change', function() {
+            currentProject.targetAudience = this.value;
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        saveProject();
+                        break;
+                    case 'e':
+                        e.preventDefault();
+                        exportWalkthrough();
+                        break;
+                    case 'p':
+                        e.preventDefault();
+                        previewWalkthrough();
+                        break;
+                }
+            }
+            
+            if (e.key === 'Escape') {
+                closeExportPanel();
+                if (window.endPreview) {
+                    window.endPreview();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
