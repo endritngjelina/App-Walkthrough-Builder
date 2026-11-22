@@ -1,0 +1,2360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WalkThrough Studio Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #1557b0;
+            --primary-light: #4285f4;
+            --secondary: #34a853;
+            --secondary-light: #5bb974;
+            --accent: #fbbc04;
+            --accent-light: #fdd835;
+            --danger: #ea4335;
+            --danger-light: #f28b82;
+            --warning: #ff9800;
+            --info: #00bcd4;
+            --success: #4caf50;
+            
+            /* Backgrounds */
+            --bg: #f8f9fa;
+            --bg-secondary: #e8eaed;
+            --surface: #ffffff;
+            --surface-elevated: #ffffff;
+            --surface-hover: #f1f3f4;
+            --surface-active: #e8f0fe;
+            
+            /* Text */
+            --text: #202124;
+            --text-secondary: #5f6368;
+            --text-muted: #80868b;
+            --text-inverse: #ffffff;
+            
+            /* Borders */
+            --border: #dadce0;
+            --border-light: #e8eaed;
+            --border-focus: #4285f4;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+            --shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+            --shadow-lg: 0 2px 6px 2px rgba(60, 64, 67, 0.15), 0 8px 24px 4px rgba(60, 64, 67, 0.15);
+            --shadow-xl: 0 4px 16px 6px rgba(60, 64, 67, 0.15), 0 8px 32px 8px rgba(60, 64, 67, 0.15);
+            
+            /* Transitions */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0.0, 0.2, 1);
+            --transition-base: 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+            --transition-slow: 0.35s cubic-bezier(0.4, 0.0, 0.2, 1);
+            
+            /* Border radius */
+            --radius-sm: 4px;
+            --radius: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-full: 50%;
+            
+            /* Spacing */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+        }
+
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 320px 1fr 320px;
+            grid-template-rows: 72px 1fr;
+            height: 100vh;
+            gap: 0;
+            background: var(--bg);
+        }
+
+        .header {
+            grid-column: 1 / -1;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-lg);
+            box-shadow: var(--shadow-sm);
+            z-index: 100;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: -0.25px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--secondary) 100%);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s ease-in-out infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: var(--space-sm);
+        }
+
+        .btn {
+            padding: var(--space-sm) var(--space-md);
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            text-decoration: none;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left var(--transition-fast);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--text-inverse);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-focus);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0);
+            background: var(--surface-active);
+        }
+
+        .sidebar {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: var(--radius-full);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        .sidebar-section {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .sidebar-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .sidebar-title::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: var(--radius-full);
+        }
+
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .step-item {
+            padding: var(--space-md);
+            background: var(--bg);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: var(--border);
+            transition: all var(--transition-base);
+        }
+
+        .step-item:hover {
+            background: var(--surface-hover);
+            transform: translateX(2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step-item:hover::before {
+            background: var(--primary);
+            width: 4px;
+        }
+
+        .step-item.active {
+            background: var(--surface-active);
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .step-item.active::before {
+            background: var(--primary);
+            width: 4px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xs);
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+
+        .step-item:hover .step-number {
+            transform: scale(1.1);
+            box-shadow: var(--shadow);
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text);
+            flex: 1;
+            line-height: 1.3;
+        }
+
+        .step-target {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            margin-top: var(--space-xs);
+        }
+
+        .step-target::before {
+            content: '🎯';
+            font-size: 10px;
+        }
+
+        .main-canvas {
+            background: var(--surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .canvas-viewport {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(26, 115, 232, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(251, 188, 4, 0.05) 0%, transparent 50%),
+                linear-gradient(135deg, var(--bg) 0%, rgba(248, 249, 250, 0.5) 100%);
+        }
+
+        .demo-app {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 640px;
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            transition: all var(--transition-slow);
+            border: 1px solid var(--border-light);
+        }
+
+        .demo-app::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            border-radius: var(--radius-xl);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .demo-app:hover::before {
+            opacity: 0.1;
+        }
+
+        .demo-header {
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            padding: 0 var(--space-lg);
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .demo-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: headerShine 4s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .demo-content {
+            padding: var(--space-lg);
+            height: calc(100% - 64px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .demo-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .demo-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .demo-content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: var(--radius-full);
+        }
+
+        .demo-element {
+            margin-bottom: var(--space-lg);
+            padding: var(--space-md);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            position: relative;
+            background: var(--surface);
+        }
+
+        .demo-element::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(26, 115, 232, 0.02), transparent);
+            border-radius: var(--radius);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .demo-element:hover {
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+            border-color: var(--border-focus);
+        }
+
+        .demo-element:hover::before {
+            opacity: 1;
+        }
+
+        .demo-element.highlighted {
+            background: rgba(251, 188, 4, 0.08);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(251, 188, 4, 0.2), var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .demo-element h4 {
+            margin: 0 0 var(--space-sm) 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .demo-element p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .color-option.active {
+            border-color: var(--text);
+            transform: scale(1.1);
+            box-shadow: var(--shadow);
+        }
+
+        .color-option.active::before,
+        .color-option.active::after {
+            opacity: 1;
+        }
+
+        .color-option:hover:not(.active) {
+            transform: scale(1.05);
+            border-color: var(--text-secondary);
+        }
+
+        .tooltip-overlay {
+            position: absolute;
+            background: var(--text);
+            color: var(--text-inverse);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius);
+            font-size: 14px;
+            max-width: 280px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all var(--transition-slow);
+            box-shadow: var(--shadow-lg);
+            backdrop-filter: blur(8px);
+            background: rgba(32, 33, 36, 0.95);
+            line-height: 1.4;
+        }
+
+        .tooltip-overlay.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tooltip-arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+        }
+
+        .tooltip-arrow.bottom {
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: rgba(32, 33, 36, 0.95);
+        }
+
+        .highlight-ring {
+            position: absolute;
+            border: 3px solid var(--accent);
+            border-radius: var(--radius);
+            pointer-events: none;
+            opacity: 0;
+            transition: all var(--transition-slow);
+            animation: pulseGlow 2s ease-in-out infinite;
+            box-shadow: 0 0 0 0 rgba(251, 188, 4, 0.4);
+        }
+
+        .highlight-ring.show {
+            opacity: 1;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(251, 188, 4, 0.4);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 0 12px rgba(251, 188, 4, 0);
+                transform: scale(1.02);
+            }
+        }
+
+        .export-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-slow);
+        }
+
+        .export-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow: hidden;
+            transform: translateY(30px) scale(0.95);
+            transition: transform var(--transition-slow);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-light);
+        }
+
+        .export-modal.show .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            padding: var(--space-xl);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, var(--surface) 0%, var(--bg) 100%);
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .modal-title::before {
+            content: '📤';
+            font-size: 24px;
+        }
+
+        .modal-body {
+            padding: var(--space-xl);
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .code-block {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--space-lg);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: var(--text);
+            position: relative;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .modal-footer {
+            padding: var(--space-lg) var(--space-xl);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: var(--space-md);
+            justify-content: flex-end;
+            background: var(--bg);
+        }
+
+        .analytics-panel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius);
+            margin-bottom: var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: analyticsShine 6s ease-in-out infinite;
+        }
+
+        @keyframes analyticsShine {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .analytics-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .analytics-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin-top: var(--space-md);
+            position: relative;
+            z-index: 1;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: var(--space-sm);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            backdrop-filter: blur(8px);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            display: block;
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-flags {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .feature-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-sm) 0;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background-color var(--transition-base);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle-switch.active {
+            background: var(--secondary);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: var(--surface);
+            border-radius: 50%;
+            transition: transform var(--transition-base);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(24px);
+        }
+
+        .ai-assistant {
+            background: linear-gradient(135deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius);
+            margin-top: var(--space-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-assistant::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: aiShine 5s ease-in-out infinite;
+        }
+
+        @keyframes aiShine {
+            0%, 100% { transform: translateX(100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(-100%) translateY(100%) rotate(45deg); }
+        }
+
+        .ai-suggestion {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: var(--space-sm);
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        .floating-toolbar {
+            position: absolute;
+            top: var(--space-lg);
+            left: var(--space-lg);
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            gap: var(--space-xs);
+            padding: var(--space-sm);
+            z-index: 50;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .toolbar-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+            font-size: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .toolbar-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+            border-radius: var(--radius);
+        }
+
+        .toolbar-btn:hover {
+            background: var(--surface-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .toolbar-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .toolbar-btn.active::before {
+            opacity: 1;
+        }
+
+        .properties-panel {
+            background: var(--surface);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .properties-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .properties-panel::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .properties-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: var(--radius-full);
+        }
+
+        .property-group {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+        }
+
+        .property-group::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: var(--space-lg);
+            right: var(--space-lg);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+        }
+
+        .property-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .property-title::before {
+            content: '';
+            width: 3px;
+            height: 12px;
+            background: linear-gradient(180deg, var(--secondary), var(--accent));
+            border-radius: var(--radius-full);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-md);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            color: var(--text);
+            transition: color var(--transition-base);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all var(--transition-base);
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+            background: var(--surface-elevated);
+        }
+
+        .form-control:hover:not(:focus) {
+            border-color: var(--text-secondary);
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right var(--space-sm) center;
+            background-repeat: no-repeat;
+            background-size: 16px;
+            padding-right: var(--space-xl);
+            cursor: pointer;
+        }
+
+        .color-picker {
+            display: flex;
+            gap: var(--space-sm);
+            margin-top: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            border: 2px solid var(--border-light);
+            transition: all var(--transition-base);
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .color-option::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 16px;
+            height: 16px;
+            border-radius: var(--radius-sm);
+            background: var(--surface);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .color-option::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text);
+            font-weight: 700;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .custom-css-editor {
+            width: 100%;
+            height: 120px;
+            padding: var(--space-sm);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 13px;
+            background: var(--surface);
+            color: var(--text);
+            resize: vertical;
+        }
+
+        .chart-container {
+            height: 200px;
+            margin-top: var(--space-md);
+        }
+
+        .ai-enhance-btn {
+            width: 100%;
+            margin-top: var(--space-sm);
+        }
+
+        .collaboration-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+            padding: var(--space-sm);
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius);
+            backdrop-filter: blur(8px);
+        }
+
+        .user-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .version-history {
+            margin-top: var(--space-md);
+        }
+
+        .history-item {
+            padding: var(--space-sm);
+            border-radius: var(--radius);
+            background: var(--surface);
+            margin-bottom: var(--space-xs);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .history-item:hover {
+            background: var(--surface-hover);
+        }
+
+        .history-timestamp {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive Design Enhancements */
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 280px 1fr 280px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 72px 1fr;
+            }
+
+            .sidebar, .properties-panel {
+                display: none;
+            }
+
+            .demo-app {
+                width: 320px;
+                height: 568px;
+            }
+
+            .floating-toolbar {
+                top: var(--space-sm);
+                left: var(--space-sm);
+                right: var(--space-sm);
+                justify-content: center;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Focus States */
+        .focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Mode Support */
+        @media (prefers-contrast: high) {
+            :root {
+                --border: #000000;
+                --text-secondary: #000000;
+                --bg: #ffffff;
+                --surface-hover: #f0f0f0;
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0f0f0f;
+                --surface: #1a1a1a;
+                --surface-elevated: #202020;
+                --surface-hover: #2a2a2a;
+                --surface-active: #2d3748;
+                --text: #ffffff;
+                --text-secondary: #a0a0a0;
+                --text-muted: #707070;
+                --border: #333333;
+                --border-light: #2a2a2a;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">W</div>
+                WalkThrough Studio Pro
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="previewWalkthrough()">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+                <button class="btn btn-secondary" onclick="importTemplate()">
+                    <i class="fas fa-file-import"></i> Import
+                </button>
+                <button class="btn btn-primary" onclick="exportWalkthrough()">
+                    <i class="fas fa-file-export"></i> Export
+                </button>
+                <div class="version-control">
+                    <button class="btn btn-secondary" onclick="undo()" title="Undo">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="redo()" title="Redo">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Walkthrough Steps</div>
+                <div class="step-list" id="stepList">
+                    <!-- Steps will be dynamically added here -->
+                </div>
+                <button class="btn btn-primary" onclick="addStep()" style="width: 100%; margin-top: 16px;">
+                    <i class="fas fa-plus"></i> Add Step
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="analytics-panel">
+                    <div class="analytics-title"><i class="fas fa-chart-line"></i> Walkthrough Analytics</div>
+                    <div class="analytics-stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalSteps">0</div>
+                            <div class="stat-label">Total Steps</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="estimatedTime">0m</div>
+                            <div class="stat-label">Est. Time</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="analyticsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Advanced Features</div>
+                <div class="feature-flags">
+                    <div class="feature-toggle">
+                        <span>Auto-progression</span>
+                        <div class="toggle-switch" onclick="toggleFeature(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="feature-toggle">
+                        <span>Analytics tracking</span>
+                        <div class="toggle-switch active" onclick="toggleFeature(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                    <div class="feature-toggle">
+                        <span>Mobile responsive</span>
+                        <div class="toggle-switch active" onclick="toggleFeature(this)">
+                            <div class="toggle-slider"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ai-assistant">
+                    <div class="analytics-title"><i class="fas fa-robot"></i> AI Assistant</div>
+                    <div class="ai-suggestion" id="aiSuggestion">
+                        Tip: Consider adding a welcome step to introduce users to your app's main features.
+                    </div>
+                    <button class="btn btn-secondary ai-enhance-btn" onclick="aiEnhanceStep()">
+                        <i class="fas fa-magic"></i> Enhance with AI
+                    </button>
+                </div>
+
+                <div class="collaboration-indicator">
+                    <div class="user-avatar">JD</div>
+                    <div class="user-avatar">TS</div>
+                    <div class="user-avatar">AK</div>
+                    <span>3 collaborators</span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-canvas">
+            <div class="floating-toolbar">
+                <button class="toolbar-btn active" onclick="setTool('select')" title="Select">
+                    <i class="fas fa-mouse-pointer"></i>
+                </button>
+                <button class="toolbar-btn" onclick="setTool('highlight')" title="Highlight">
+                    <i class="fas fa-highlighter"></i>
+                </button>
+                <button class="toolbar-btn" onclick="setTool('tooltip')" title="Tooltip">
+                    <i class="fas fa-comment"></i>
+                </button>
+                <button class="toolbar-btn" onclick="setTool('zoom')" title="Zoom">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="toolbar-btn" onclick="setTool('custom')" title="Custom CSS">
+                    <i class="fas fa-code"></i>
+                </button>
+            </div>
+
+            <div class="canvas-viewport">
+                <div class="demo-app" id="demoApp">
+                    <div class="demo-header">
+                        <h3>Demo Mobile App</h3>
+                    </div>
+                    <div class="demo-content">
+                        <div class="demo-element" data-element="welcome-banner">
+                            <h4><i class="fas fa-hand-wave"></i> Welcome to our app!</h4>
+                            <p>Get started with these amazing features</p>
+                        </div>
+                        <div class="demo-element" data-element="navigation-menu">
+                            <h4><i class="fas fa-compass"></i> Navigation Menu</h4>
+                            <p>Find your way around easily</p>
+                        </div>
+                        <div class="demo-element" data-element="search-bar">
+                            <h4><i class="fas fa-search"></i> Smart Search</h4>
+                            <p>Discover content instantly</p>
+                        </div>
+                        <div class="demo-element" data-element="user-profile">
+                            <h4><i class="fas fa-user"></i> User Profile</h4>
+                            <p>Customize your experience</p>
+                        </div>
+                        <div class="demo-element" data-element="settings">
+                            <h4><i class="fas fa-cog"></i> Settings</h4>
+                            <p>Configure app preferences</p>
+                        </div>
+                        <div class="demo-element" data-element="help-center">
+                            <h4><i class="fas fa-question-circle"></i> Help Center</h4>
+                            <p>Get support when you need it</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Walkthrough overlays -->
+                <div class="highlight-ring" id="highlightRing"></div>
+                <div class="tooltip-overlay" id="tooltipOverlay">
+                    <div class="tooltip-arrow bottom"></div>
+                    <div id="tooltipContent"></div>
+                </div>
+            </div>
+        </main>
+
+        <aside class="properties-panel">
+            <div class="property-group">
+                <div class="property-title">Step Configuration</div>
+                <div class="form-group">
+                    <label class="form-label">Step Title</label>
+                    <input type="text" class="form-control" id="stepTitle" placeholder="Enter step title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" id="stepDescription" rows="3" placeholder="Describe what this step teaches"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Target Element</label>
+                    <select class="form-control form-select" id="targetElement">
+                        <option value="">Select an element</option>
+                        <option value="welcome-banner">Welcome Banner</option>
+                        <option value="navigation-menu">Navigation Menu</option>
+                        <option value="search-bar">Search Bar</option>
+                        <option value="user-profile">User Profile</option>
+                        <option value="settings">Settings</option>
+                        <option value="help-center">Help Center</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <div class="property-title">Visual Styling</div>
+                <div class="form-group">
+                    <label class="form-label">Tooltip Position</label>
+                    <select class="form-control form-select" id="tooltipPosition">
+                        <option value="top">Top</option>
+                        <option value="bottom">Bottom</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Highlight Color</label>
+                    <div class="color-picker">
+                        <div class="color-option active" style="background: #fbbc04" data-color="#fbbc04"></div>
+                        <div class="color-option" style="background: #34a853" data-color="#34a853"></div>
+                        <div class="color-option" style="background: #ea4335" data-color="#ea4335"></div>
+                        <div class="color-option" style="background: #1a73e8" data-color="#1a73e8"></div>
+                        <div class="color-option" style="background: #9c27b0" data-color="#9c27b0"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Animation Style</label>
+                    <select class="form-control form-select" id="animationStyle">
+                        <option value="pulse">Pulse</option>
+                        <option value="fade">Fade</option>
+                        <option value="bounce">Bounce</option>
+                        <option value="slide">Slide</option>
+                        <option value="scale">Scale</option>
+                        <option value="rotate">Rotate</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Custom CSS</label>
+                    <textarea class="custom-css-editor" id="customCSS" placeholder="Enter custom CSS for this step..."></textarea>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <div class="property-title">Behavior Settings</div>
+                <div class="form-group">
+                    <label class="form-label">Auto-advance (seconds)</label>
+                    <input type="number" class="form-control" id="autoAdvance" placeholder="0 = manual" min="0" max="30">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Required Action</label>
+                    <select class="form-control form-select" id="requiredAction">
+                        <option value="none">None</option>
+                        <option value="click">Click element</option>
+                        <option value="hover">Hover element</option>
+                        <option value="scroll">Scroll to element</option>
+                        <option value="input">Enter text</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Skip Allowed</label>
+                    <select class="form-control form-select" id="skipAllowed">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="property-group">
+                <div class="property-title">Actions</div>
+                <button class="btn btn-secondary" onclick="duplicateStep()" style="width: 100%; margin-bottom: 8px;">
+                    <i class="fas fa-copy"></i> Duplicate Step
+                </button>
+                <button class="btn btn-secondary" onclick="testStep()" style="width: 100%; margin-bottom: 8px;">
+                    <i class="fas fa-vial"></i> Test Step
+                </button>
+                <button class="btn" onclick="deleteStep()" style="width: 100%; background: var(--danger); color: white;">
+                    <i class="fas fa-trash"></i> Delete Step
+                </button>
+            </div>
+
+            <div class="property-group">
+                <div class="property-title">Version History</div>
+                <div class="version-history" id="versionHistory">
+                    <!-- Version history items will be added here -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="export-modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Export Walkthrough Configuration</h3>
+                <button class="btn btn-secondary" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Export Format</label>
+                    <select class="form-control form-select" id="exportFormat">
+                        <option value="json">JSON Configuration</option>
+                        <option value="javascript">JavaScript Integration</option>
+                        <option value="react">React Component</option>
+                        <option value="typescript">TypeScript Definitions</option>
+                        <option value="android">Android XML</option>
+                        <option value="ios">iOS Swift</option>
+                    </select>
+                </div>
+                <div class="code-block" id="exportCode"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="copyToClipboard()">
+                    <i class="fas fa-copy"></i> Copy to Clipboard
+                </button>
+                <button class="btn btn-primary" onclick="downloadFile()">
+                    <i class="fas fa-download"></i> Download File
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let currentTool = 'select';
+        let walkthroughSteps = [];
+        let currentStepIndex = -1;
+        let isPreviewMode = false;
+        let versionHistory = [];
+        let currentVersion = 0;
+        let analyticsChart = null;
+
+        // DOM Elements
+        const stepList = document.getElementById('stepList');
+        const demoApp = document.getElementById('demoApp');
+        const highlightRing = document.getElementById('highlightRing');
+        const tooltipOverlay = document.getElementById('tooltipOverlay');
+        const exportModal = document.getElementById('exportModal');
+        const versionHistoryList = document.getElementById('versionHistory');
+        const analyticsChartCanvas = document.getElementById('analyticsChart');
+
+        // AI Suggestions
+        const aiSuggestions = [
+            "Consider adding a welcome step to introduce users to your app's main features.",
+            "Steps 2-3 might be too close together. Consider adding a brief pause.",
+            "Your walkthrough could benefit from a final 'completion' step.",
+            "Try using different highlight colors to categorize feature types.",
+            "Consider adding micro-interactions to make the tour more engaging.",
+            "Your current flow covers core features well - consider advanced features next.",
+            "Users typically spend 15-20 seconds per step. Adjust your content accordingly.",
+            "Adding tooltip animations can make the experience feel more polished.",
+            "Consider adding a progress indicator to show users how far they are.",
+            "Test your walkthrough on different screen sizes for responsiveness."
+        ];
+
+        // Initialize the application
+        function init() {
+            setupEventListeners();
+            updateAISuggestion();
+            addStep(); // Add initial step
+            setupAnalyticsChart();
+            saveVersionHistory();
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Demo element click handlers
+            document.querySelectorAll('.demo-element').forEach(element => {
+                element.addEventListener('click', () => selectElement(element));
+            });
+
+            // Form change handlers
+            document.getElementById('stepTitle').addEventListener('input', updateCurrentStep);
+            document.getElementById('stepDescription').addEventListener('input', updateCurrentStep);
+            document.getElementById('targetElement').addEventListener('change', updateCurrentStep);
+            document.getElementById('tooltipPosition').addEventListener('change', updateCurrentStep);
+            document.getElementById('animationStyle').addEventListener('change', updateCurrentStep);
+            document.getElementById('autoAdvance').addEventListener('input', updateCurrentStep);
+            document.getElementById('requiredAction').addEventListener('change', updateCurrentStep);
+            document.getElementById('skipAllowed').addEventListener('change', updateCurrentStep);
+            document.getElementById('customCSS').addEventListener('input', updateCurrentStep);
+
+            // Color picker handlers
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', () => selectColor(option));
+            });
+
+            // Export format change handler
+            document.getElementById('exportFormat').addEventListener('change', updateExportCode);
+        }
+
+        // Tool Management
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.toolbar-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.toolbar-btn').classList.add('active');
+        }
+
+        // Step Management
+        function addStep() {
+            const stepId = `step-${Date.now()}`;
+            const step = {
+                id: stepId,
+                title: `Step ${walkthroughSteps.length + 1}`,
+                description: 'Click to edit this step description',
+                target: '',
+                position: 'bottom',
+                color: '#fbbc04',
+                animation: 'pulse',
+                autoAdvance: 0,
+                requiredAction: 'none',
+                skipAllowed: true,
+                customCSS: ''
+            };
+
+            walkthroughSteps.push(step);
+            renderStepList();
+            selectStep(walkthroughSteps.length - 1);
+            updateAnalytics();
+            updateAISuggestion();
+            saveVersionHistory();
+        }
+
+        function selectStep(index) {
+            currentStepIndex = index;
+            renderStepList();
+            populatePropertiesPanel();
+            previewStep();
+        }
+
+        function updateCurrentStep() {
+            if (currentStepIndex === -1) return;
+
+            const step = walkthroughSteps[currentStepIndex];
+            step.title = document.getElementById('stepTitle').value || step.title;
+            step.description = document.getElementById('stepDescription').value || step.description;
+            step.target = document.getElementById('targetElement').value || step.target;
+            step.position = document.getElementById('tooltipPosition').value || step.position;
+            step.animation = document.getElementById('animationStyle').value || step.animation;
+            step.autoAdvance = parseInt(document.getElementById('autoAdvance').value) || 0;
+            step.requiredAction = document.getElementById('requiredAction').value || step.requiredAction;
+            step.skipAllowed = document.getElementById('skipAllowed').value === 'true';
+            step.customCSS = document.getElementById('customCSS').value || '';
+
+            renderStepList();
+            previewStep();
+            updateAnalytics();
+            saveVersionHistory();
+        }
+
+        function deleteStep() {
+            if (currentStepIndex === -1 || walkthroughSteps.length === 0) return;
+
+            walkthroughSteps.splice(currentStepIndex, 1);
+            currentStepIndex = Math.max(0, currentStepIndex - 1);
+            
+            if (walkthroughSteps.length === 0) {
+                currentStepIndex = -1;
+                clearPreview();
+            }
+
+            renderStepList();
+            populatePropertiesPanel();
+            updateAnalytics();
+            updateAISuggestion();
+            saveVersionHistory();
+        }
+
+        function duplicateStep() {
+            if (currentStepIndex === -1) return;
+
+            const originalStep = walkthroughSteps[currentStepIndex];
+            const duplicatedStep = {
+                ...originalStep,
+                id: `step-${Date.now()}`,
+                title: `${originalStep.title} (Copy)`
+            };
+
+            walkthroughSteps.splice(currentStepIndex + 1, 0, duplicatedStep);
+            selectStep(currentStepIndex + 1);
+            updateAnalytics();
+            saveVersionHistory();
+        }
+
+        function testStep() {
+            if (currentStepIndex !== -1) {
+                const step = walkthroughSteps[currentStepIndex];
+                if (step.target) {
+                    const targetElement = document.querySelector(`[data-element="${step.target}"]`);
+                    if (targetElement) {
+                        highlightElement(targetElement, step.color);
+                        showTooltip(step.title, step.description, step.target, step.position);
+                        
+                        setTimeout(() => {
+                            hideTooltip();
+                            highlightRing.classList.remove('show');
+                            alert(`Step "${step.title}" test completed successfully!`);
+                        }, 3000);
+                        return;
+                    }
+                }
+            }
+            alert('Please select a step with a target element to test.');
+        }
+
+        // UI Rendering
+        function renderStepList() {
+            stepList.innerHTML = '';
+            
+            walkthroughSteps.forEach((step, index) => {
+                const stepElement = document.createElement('div');
+                stepElement.className = `step-item ${index === currentStepIndex ? 'active' : ''}`;
+                
+                stepElement.innerHTML = `
+                    <div class="step-header">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-title">${step.title}</div>
+                    </div>
+                    <div class="step-target">${step.target || 'No target selected'}</div>
+                `;
+                
+                stepElement.addEventListener('click', () => selectStep(index));
+                stepList.appendChild(stepElement);
+            });
+        }
+
+        function populatePropertiesPanel() {
+            if (currentStepIndex === -1) {
+                // Clear all form fields
+                document.getElementById('stepTitle').value = '';
+                document.getElementById('stepDescription').value = '';
+                document.getElementById('targetElement').value = '';
+                document.getElementById('tooltipPosition').value = 'bottom';
+                document.getElementById('animationStyle').value = 'pulse';
+                document.getElementById('autoAdvance').value = '';
+                document.getElementById('requiredAction').value = 'none';
+                document.getElementById('skipAllowed').value = 'true';
+                document.getElementById('customCSS').value = '';
+                return;
+            }
+
+            const step = walkthroughSteps[currentStepIndex];
+            document.getElementById('stepTitle').value = step.title;
+            document.getElementById('stepDescription').value = step.description;
+            document.getElementById('targetElement').value = step.target;
+            document.getElementById('tooltipPosition').value = step.position;
+            document.getElementById('animationStyle').value = step.animation;
+            document.getElementById('autoAdvance').value = step.autoAdvance;
+            document.getElementById('requiredAction').value = step.requiredAction;
+            document.getElementById('skipAllowed').value = step.skipAllowed;
+            document.getElementById('customCSS').value = step.customCSS;
+
+            // Update color selection
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.color === step.color);
+            });
+        }
+
+        // Visual Preview
+        function previewStep() {
+            if (currentStepIndex === -1) {
+                clearPreview();
+                return;
+            }
+
+            const step = walkthroughSteps[currentStepIndex];
+            if (!step.target) {
+                clearPreview();
+                return;
+            }
+
+            const targetElement = document.querySelector(`[data-element="${step.target}"]`);
+            if (!targetElement) {
+                clearPreview();
+                return;
+            }
+
+            highlightElement(targetElement, step.color);
+            showTooltip(step.title, step.description, step.target, step.position);
+        }
+
+        function highlightElement(element, color = '#fbbc04') {
+            // Remove previous highlights
+            document.querySelectorAll('.demo-element').forEach(el => {
+                el.classList.remove('highlighted');
+            });
+
+            element.classList.add('highlighted');
+
+            // Position highlight ring
+            const rect = element.getBoundingClientRect();
+            const containerRect = demoApp.getBoundingClientRect();
+            
+            highlightRing.style.cssText = `
+                top: ${rect.top - containerRect.top - 5}px;
+                left: ${rect.left - containerRect.left - 5}px;
+                width: ${rect.width + 10}px;
+                height: ${rect.height + 10}px;
+                border-color: ${color};
+            `;
+            highlightRing.classList.add('show');
+        }
+
+        function showTooltip(title, description, target, position = 'bottom') {
+            const targetElement = document.querySelector(`[data-element="${target}"]`);
+            if (!targetElement) return;
+
+            const rect = targetElement.getBoundingClientRect();
+            const containerRect = demoApp.getBoundingClientRect();
+            
+            document.getElementById('tooltipContent').innerHTML = `
+                <strong>${title}</strong><br>
+                ${description}
+            `;
+
+            let top, left;
+            switch (position) {
+                case 'top':
+                    top = rect.top - containerRect.top - 80;
+                    left = rect.left - containerRect.left + rect.width / 2 - 125;
+                    break;
+                case 'bottom':
+                default:
+                    top = rect.bottom - containerRect.top + 10;
+                    left = rect.left - containerRect.left + rect.width / 2 - 125;
+                    break;
+                case 'left':
+                    top = rect.top - containerRect.top + rect.height / 2 - 40;
+                    left = rect.left - containerRect.left - 260;
+                    break;
+                case 'right':
+                    top = rect.top - containerRect.top + rect.height / 2 - 40;
+                    left = rect.right - containerRect.left + 10;
+                    break;
+            }
+
+            tooltipOverlay.style.cssText = `
+                top: ${top}px;
+                left: ${left}px;
+            `;
+            tooltipOverlay.classList.add('show');
+        }
+
+        function hideTooltip() {
+            tooltipOverlay.classList.remove('show');
+        }
+
+        function clearPreview() {
+            document.querySelectorAll('.demo-element').forEach(el => {
+                el.classList.remove('highlighted');
+            });
+            highlightRing.classList.remove('show');
+            hideTooltip();
+        }
+
+        // Color Selection
+        function selectColor(colorOption) {
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+            });
+            colorOption.classList.add('active');
+
+            if (currentStepIndex !== -1) {
+                walkthroughSteps[currentStepIndex].color = colorOption.dataset.color;
+                previewStep();
+                saveVersionHistory();
+            }
+        }
+
+        // Element Selection
+        function selectElement(element) {
+            if (currentTool !== 'select') return;
+
+            const elementId = element.dataset.element;
+            if (currentStepIndex !== -1) {
+                walkthroughSteps[currentStepIndex].target = elementId;
+                document.getElementById('targetElement').value = elementId;
+                previewStep();
+                renderStepList();
+                saveVersionHistory();
+            }
+        }
+
+        // Analytics and Statistics
+        function updateAnalytics() {
+            document.getElementById('totalSteps').textContent = walkthroughSteps.length;
+            
+            const estimatedTime = walkthroughSteps.reduce((total, step) => {
+                return total + Math.max(step.autoAdvance || 10, 5); // Minimum 5 seconds per step
+            }, 0);
+            
+            const minutes = Math.ceil(estimatedTime / 60);
+            document.getElementById('estimatedTime').textContent = `${minutes}m`;
+        }
+
+        function setupAnalyticsChart() {
+            if (analyticsChart) {
+                analyticsChart.destroy();
+            }
+            
+            const ctx = analyticsChartCanvas.getContext('2d');
+            analyticsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Completion', 'Engagement', 'Effectiveness', 'Retention'],
+                    datasets: [{
+                        label: 'Performance Metrics',
+                        data: [85, 92, 78, 89],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: 'white'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // AI Assistant
+        function updateAISuggestion() {
+            const suggestion = aiSuggestions[Math.floor(Math.random() * aiSuggestions.length)];
+            document.getElementById('aiSuggestion').textContent = suggestion;
+        }
+
+        function aiEnhanceStep() {
+            if (currentStepIndex === -1) {
+                alert('Please select a step to enhance.');
+                return;
+            }
+            
+            const step = walkthroughSteps[currentStepIndex];
+            const enhancements = [
+                "Improved for clarity and engagement.",
+                "Optimized for user comprehension.",
+                "Enhanced with action-oriented language.",
+                "Refined to be more concise and impactful.",
+                "Strengthened with benefit-focused messaging."
+            ];
+            
+            const enhancement = enhancements[Math.floor(Math.random() * enhancements.length)];
+            
+            // Simulate AI processing
+            document.getElementById('stepDescription').classList.add('loading');
+            
+            setTimeout(() => {
+                step.description = `${step.description} ${enhancement}`;
+                document.getElementById('stepDescription').value = step.description;
+                document.getElementById('stepDescription').classList.remove('loading');
+                renderStepList();
+                previewStep();
+                saveVersionHistory();
+                alert('Step enhanced with AI!');
+            }, 1500);
+        }
+
+        // Feature Toggles
+        function toggleFeature(toggleElement) {
+            toggleElement.classList.toggle('active');
+            // In a real app, this would update the configuration
+        }
+
+        // Preview Mode
+        function previewWalkthrough() {
+            if (walkthroughSteps.length === 0) {
+                alert('Add some steps first to preview the walkthrough!');
+                return;
+            }
+
+            isPreviewMode = true;
+            let currentPreviewStep = 0;
+
+            function showNextStep() {
+                if (currentPreviewStep >= walkthroughSteps.length) {
+                    clearPreview();
+                    isPreviewMode = false;
+                    alert('Walkthrough preview completed!');
+                    return;
+                }
+
+                const step = walkthroughSteps[currentPreviewStep];
+                if (step.target) {
+                    const targetElement = document.querySelector(`[data-element="${step.target}"]`);
+                    if (targetElement) {
+                        highlightElement(targetElement, step.color);
+                        showTooltip(step.title, step.description, step.target, step.position);
+                    }
+                }
+
+                setTimeout(() => {
+                    currentPreviewStep++;
+                    showNextStep();
+                }, (step.autoAdvance || 3) * 1000);
+            }
+
+            showNextStep();
+        }
+
+        // Version Control
+        function saveVersionHistory() {
+            // Save current state to history
+            const timestamp = new Date();
+            const version = {
+                id: `v${versionHistory.length + 1}`,
+                timestamp: timestamp.toISOString(),
+                steps: JSON.parse(JSON.stringify(walkthroughSteps)),
+                currentStepIndex: currentStepIndex
+            };
+            
+            versionHistory.push(version);
+            currentVersion = versionHistory.length - 1;
+            renderVersionHistory();
+        }
+
+        function renderVersionHistory() {
+            versionHistoryList.innerHTML = '';
+            
+            // Show last 5 versions
+            const startIndex = Math.max(0, versionHistory.length - 5);
+            const recentVersions = versionHistory.slice(startIndex);
+            
+            recentVersions.forEach((version, index) => {
+                const versionElement = document.createElement('div');
+                versionElement.className = `history-item ${index === recentVersions.length - 1 ? 'active' : ''}`;
+                
+                const date = new Date(version.timestamp);
+                const timeString = date.toLocaleTimeString();
+                
+                versionElement.innerHTML = `
+                    <div><strong>${version.id}</strong> - ${version.steps.length} steps</div>
+                    <div class="history-timestamp">${timeString}</div>
+                `;
+                
+                versionElement.addEventListener('click', () => restoreVersion(startIndex + index));
+                versionHistoryList.appendChild(versionElement);
+            });
+        }
+
+        function restoreVersion(index) {
+            if (index >= 0 && index < versionHistory.length) {
+                const version = versionHistory[index];
+                walkthroughSteps = JSON.parse(JSON.stringify(version.steps));
+                currentStepIndex = version.currentStepIndex;
+                currentVersion = index;
+                
+                renderStepList();
+                populatePropertiesPanel();
+                previewStep();
+                updateAnalytics();
+                renderVersionHistory();
+            }
+        }
+
+        function undo() {
+            if (currentVersion > 0) {
+                restoreVersion(currentVersion - 1);
+            }
+        }
+
+        function redo() {
+            if (currentVersion < versionHistory.length - 1) {
+                restoreVersion(currentVersion + 1);
+            }
+        }
+
+        // Template Management
+        function importTemplate() {
+            const templates = [
+                {
+                    name: 'Mobile App Onboarding',
+                    steps: [
+                        { title: 'Welcome!', description: 'Welcome to our amazing app', target: 'welcome-banner', position: 'bottom', color: '#1a73e8' },
+                        { title: 'Navigate Easily', description: 'Use this menu to explore features', target: 'navigation-menu', position: 'right', color: '#34a853' },
+                        { title: 'Search Everything', description: 'Find what you need instantly', target: 'search-bar', position: 'bottom', color: '#fbbc04' }
+                    ]
+                },
+                {
+                    name: 'User Profile Setup',
+                    steps: [
+                        { title: 'Your Profile', description: 'Customize your experience here', target: 'user-profile', position: 'left', color: '#ea4335' },
+                        { title: 'App Settings', description: 'Configure your preferences', target: 'settings', position: 'top', color: '#9c27b0' }
+                    ]
+                }
+            ];
+
+            const templateName = prompt('Choose template:\n1. Mobile App Onboarding\n2. User Profile Setup\n\nEnter 1 or 2:');
+            const templateIndex = parseInt(templateName) - 1;
+
+            if (templateIndex >= 0 && templateIndex < templates.length) {
+                walkthroughSteps = templates[templateIndex].steps.map((step, index) => ({
+                    id: `step-${Date.now()}-${index}`,
+                    title: step.title,
+                    description: step.description,
+                    target: step.target,
+                    position: step.position,
+                    color: step.color,
+                    animation: 'pulse',
+                    autoAdvance: 0,
+                    requiredAction: 'none',
+                    skipAllowed: true,
+                    customCSS: ''
+                }));
+
+                currentStepIndex = 0;
+                renderStepList();
+                populatePropertiesPanel();
+                previewStep();
+                updateAnalytics();
+                updateAISuggestion();
+                saveVersionHistory();
+            }
+        }
+
+        // Export Functionality
+        function exportWalkthrough() {
+            if (walkthroughSteps.length === 0) {
+                alert('Add some steps first before exporting!');
+                return;
+            }
+
+            updateExportCode();
+            exportModal.classList.add('show');
+        }
+
+        function updateExportCode() {
+            const format = document.getElementById('exportFormat').value;
+            const codeBlock = document.getElementById('exportCode');
+            
+            let code = '';
+            
+            switch (format) {
+                case 'json':
+                    code = JSON.stringify({
+                        version: '1.0',
+                        metadata: {
+                            title: 'App Walkthrough',
+                            description: 'Generated by WalkThrough Studio Pro',
+                            totalSteps: walkthroughSteps.length,
+                            estimatedDuration: Math.ceil(walkthroughSteps.reduce((total, step) => total + Math.max(step.autoAdvance || 10, 5), 0) / 60)
+                        },
+                        steps: walkthroughSteps,
+                        settings: {
+                            theme: 'default',
+                            showProgress: true,
+                            allowSkip: true,
+                            mobileResponsive: true
+                        }
+                    }, null, 2);
+                    break;
+                    
+                case 'javascript':
+                    code = `// WalkThrough Configuration
+const walkthroughConfig = ${JSON.stringify({
+                        steps: walkthroughSteps,
+                        settings: { theme: 'default', showProgress: true }
+                    }, null, 2)};
+
+// Initialize walkthrough
+function initWalkthrough() {
+    const walkthrough = new WalkthroughEngine(walkthroughConfig);
+    walkthrough.start();
+}
+
+// Start when page loads
+document.addEventListener('DOMContentLoaded', initWalkthrough);`;
+                    break;
+                    
+                case 'react':
+                    code = `import React from 'react';
+import { Walkthrough } from '@your-company/walkthrough';
+
+const walkthroughSteps = ${JSON.stringify(walkthroughSteps, null, 2)};
+
+export default function AppWalkthrough() {
+    return (
+        <Walkthrough
+            steps={walkthroughSteps}
+            onComplete={() => console.log('Walkthrough completed')}
+            showProgress={true}
+            allowSkip={true}
+        />
+    );
+}`;
+                    break;
+                    
+                case 'typescript':
+                    code = `interface WalkthroughStep {
+    id: string;
+    title: string;
+    description: string;
+    target: string;
+    position: 'top' | 'bottom' | 'left' | 'right';
+    color: string;
+    animation: 'pulse' | 'fade' | 'bounce' | 'slide';
+    autoAdvance: number;
+    requiredAction: 'none' | 'click' | 'hover' | 'scroll';
+    skipAllowed: boolean;
+}
+
+interface WalkthroughConfig {
+    version: string;
+    steps: WalkthroughStep[];
+    settings: {
+        theme: string;
+        showProgress: boolean;
+        allowSkip: boolean;
+        mobileResponsive: boolean;
+    };
+}
+
+export const walkthroughConfig: WalkthroughConfig = ${JSON.stringify({
+                        version: '1.0',
+                        steps: walkthroughSteps,
+                        settings: { theme: 'default', showProgress: true, allowSkip: true, mobileResponsive: true }
+                    }, null, 2)};`;
+                    break;
+                    
+                case 'android':
+                    code = `<!-- Walkthrough Step Configuration -->
+<walkthrough>
+    <metadata>
+        <title>App Walkthrough</title>
+        <description>Generated by WalkThrough Studio Pro</description>
+        <totalSteps>${walkthroughSteps.length}</totalSteps>
+    </metadata>
+    
+    ${walkthroughSteps.map((step, index) => `
+    <step id="${step.id}">
+        <title>${step.title}</title>
+        <description>${step.description}</description>
+        <target>${step.target}</target>
+        <position>${step.position}</position>
+        <color>${step.color}</color>
+        <animation>${step.animation}</animation>
+    </step>
+    `).join('')}
+</walkthrough>`;
+                    break;
+                    
+                case 'ios':
+                    code = `// Walkthrough Step Configuration
+struct WalkthroughStep {
+    let id: String
+    let title: String
+    let description: String
+    let target: String
+    let position: String
+    let color: String
+    let animation: String
+}
+
+let walkthroughSteps = [
+    ${walkthroughSteps.map(step => `
+    WalkthroughStep(
+        id: "${step.id}",
+        title: "${step.title}",
+        description: "${step.description}",
+        target: "${step.target}",
+        position: "${step.position}",
+        color: "${step.color}",
+        animation: "${step.animation}"
+    )`).join(',\n    ')}
+]`;
+                    break;
+            }
+            
+            codeBlock.textContent = code;
+        }
+
+        function closeModal() {
+            exportModal.classList.remove('show');
+        }
+
+        function copyToClipboard() {
+            const code = document.getElementById('exportCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Code copied to clipboard!');
+            });
+        }
+
+        function downloadFile() {
+            const format = document.getElementById('exportFormat').value;
+            const code = document.getElementById('exportCode').textContent;
+            
+            const extensions = {
+                json: 'json',
+                javascript: 'js',
+                react: 'jsx',
+                typescript: 'ts',
+                android: 'xml',
+                ios: 'swift'
+            };
+            
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `walkthrough-config.${extensions[format]}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+</html>
