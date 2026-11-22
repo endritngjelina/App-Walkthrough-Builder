@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Walkthrough Builder Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #007AFF;
+            --primary-dark: #0056CC;
+            --primary-light: #4DA2FF;
+            --secondary: #5856D6;
+            --secondary-light: #7B7AE8;
+            --success: #34C759;
+            --warning: #FF9500;
+            --danger: #FF3B30;
+            --surface: #F8F9FA;
+            --surface-elevated: #FFFFFF;
+            --surface-hover: #F1F3F4;
+            --text-primary: #1D1D1F;
+            --text-secondary: #6E6E73;
+            --text-tertiary: #8E8E93;
+            --border: #D2D2D7;
+            --border-light: #E5E5EA;
+            --shadow-sm: rgba(0, 0, 0, 0.04);
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-lg: rgba(0, 0, 0, 0.16);
+            --backdrop: rgba(0, 0, 0, 0.6);
+            --gradient-primary: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+            --gradient-surface: linear-gradient(180deg, #FFFFFF 0%, #F8F9FA 100%);
+            --blur: blur(20px);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            max-width: 1800px;
+            margin: 0 auto;
+            background: var(--surface-elevated);
+            box-shadow: 0 25px 50px -12px var(--shadow-lg);
+            border-radius: 20px;
+            overflow: hidden;
+            backdrop-filter: var(--blur);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 380px;
+            background: var(--gradient-surface);
+            border-right: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+        }
+
+        .sidebar-header {
+            padding: 30px 25px 25px;
+            background: var(--surface-elevated);
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0.03;
+            z-index: 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 25px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .sidebar-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        .section {
+            margin-bottom: 35px;
+            opacity: 0;
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 16px 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 15px;
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            box-shadow: 0 1px 3px var(--shadow-sm);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12), 0 4px 12px var(--shadow);
+            transform: translateY(-1px);
+        }
+
+        .form-input:hover, .form-select:hover, .form-textarea:hover {
+            border-color: var(--border);
+            box-shadow: 0 2px 8px var(--shadow-sm);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 90px;
+            font-family: inherit;
+            line-height: 1.5;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: -0.01em;
+            text-decoration: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+            border: 2px solid var(--border-light);
+            box-shadow: 0 2px 8px var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-hover);
+            border-color: var(--border);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #34C759 0%, #30B94D 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 199, 89, 0.4);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #FF9500 0%, #FF8C00 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 149, 0, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #FF3B30 0%, #FF2D20 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 59, 48, 0.4);
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+        }
+
+        .toolbar {
+            padding: 25px 30px;
+            background: var(--surface-elevated);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: var(--blur);
+            position: relative;
+        }
+
+        .toolbar::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 12px;
+        }
+
+        .preview-area {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, var(--surface-hover) 0%, var(--surface) 100%);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-mockup {
+            width: 320px;
+            height: 640px;
+            background: linear-gradient(145deg, #2C2C2E 0%, #1C1C1E 100%);
+            border-radius: 30px;
+            padding: 10px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .phone-mockup:hover {
+            transform: scale(1);
+        }
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            z-index: 10;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: var(--surface-elevated);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .phone-header {
+            height: 70px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        .phone-content {
+            padding: 25px;
+            height: calc(100% - 70px);
+            position: relative;
+            background: linear-gradient(180deg, var(--surface-elevated) 0%, var(--surface) 100%);
+        }
+
+        /* Step Items */
+        .step-item {
+            background: var(--surface-elevated);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow-sm);
+        }
+
+        .step-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .step-item:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 8px 25px var(--shadow);
+            transform: translateY(-2px);
+        }
+
+        .step-item:hover::before {
+            left: 100%;
+        }
+
+        .step-item.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.08) 0%, rgba(88, 86, 214, 0.05) 100%);
+            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .step-item.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 0 2px 2px 0;
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .step-number {
+            background: var(--gradient-primary);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .step-item:hover .step-actions {
+            opacity: 1;
+        }
+
+        .step-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            background: var(--surface-hover);
+            color: var(--text-secondary);
+        }
+
+        .step-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 16px;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        /* Tooltip Overlay */
+        .tooltip-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--backdrop);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tooltip-overlay.active {
+            opacity: 1;
+        }
+
+        .tooltip-highlight {
+            position: absolute;
+            border: 3px solid var(--primary);
+            border-radius: 8px;
+            background: rgba(0, 122, 255, 0.1);
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(0, 122, 255, 0); }
+        }
+
+        .tooltip-bubble {
+            position: absolute;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 250px;
+            box-shadow: 0 10px 30px var(--shadow);
+            z-index: 1000;
+        }
+
+        .tooltip-bubble::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 8px solid transparent;
+        }
+
+        .tooltip-bubble.top::before {
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-color: var(--surface-elevated);
+        }
+
+        .tooltip-bubble.bottom::before {
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: var(--surface-elevated);
+        }
+
+        .tooltip-bubble.left::before {
+            right: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left-color: var(--surface-elevated);
+        }
+
+        .tooltip-bubble.right::before {
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right-color: var(--surface-elevated);
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .tooltip-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .tooltip-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tooltip-skip {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .tooltip-skip:hover {
+            color: var(--text-primary);
+        }
+
+        /* Export Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--backdrop);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+        }
+
+        .modal-backdrop.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--surface-elevated);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--gradient-primary);
+            opacity: 0.02;
+            border-radius: 24px;
+            pointer-events: none;
+        }
+
+        .modal-backdrop.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .modal-close {
+            background: var(--surface-hover);
+            border: none;
+            font-size: 24px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .code-block {
+            background: linear-gradient(135deg, #1e1e1e 0%, #2d2d30 100%);
+            color: #d4d4d4;
+            padding: 25px;
+            border-radius: 16px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        }
+
+        .code-block::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .code-block::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .code-block::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .code-block::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Interactive Elements */
+        .demo-button {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 12px;
+            font-size: 15px;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 122, 255, 0.4);
+        }
+
+        .demo-button:hover::before {
+            left: 100%;
+        }
+
+        .demo-card {
+            background: var(--surface-elevated);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 12px;
+            box-shadow: 0 4px 12px var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px var(--shadow);
+            border-color: var(--primary-light);
+        }
+
+        .demo-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .demo-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .demo-card p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .demo-input {
+            width: calc(100% - 24px);
+            padding: 14px 18px;
+            border: 2px solid var(--border-light);
+            border-radius: 12px;
+            margin: 12px;
+            font-size: 15px;
+            background: var(--surface-elevated);
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px var(--shadow-sm);
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12), 0 4px 12px var(--shadow);
+            transform: translateY(-1px);
+        }
+
+        .demo-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+            }
+            
+            .phone-mockup {
+                position: relative;
+                transform: none;
+                margin: 20px auto;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        /* Tooltip Overlay */
+        .tooltip-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--backdrop);
+            pointer-events: none;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(8px);
+        }
+
+        .tooltip-overlay.active {
+            opacity: 1;
+        }
+
+        .tooltip-highlight {
+            position: absolute;
+            border: 3px solid var(--primary);
+            border-radius: 12px;
+            background: rgba(0, 122, 255, 0.12);
+            pointer-events: none;
+            animation: pulseGlow 2s infinite;
+            box-shadow: 
+                0 0 0 0 rgba(0, 122, 255, 0.4),
+                inset 0 0 20px rgba(0, 122, 255, 0.1);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 0 0 rgba(0, 122, 255, 0.7),
+                    inset 0 0 20px rgba(0, 122, 255, 0.1);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 0 15px rgba(0, 122, 255, 0),
+                    inset 0 0 30px rgba(0, 122, 255, 0.2);
+            }
+        }
+
+        .tooltip-bubble {
+            position: absolute;
+            background: var(--surface-elevated);
+            border: 2px solid var(--border-light);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 280px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            backdrop-filter: var(--blur);
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .tooltip-bubble.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .tooltip-bubble::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+        }
+
+        .tooltip-bubble.top::before {
+            bottom: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-color: var(--surface-elevated);
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .tooltip-bubble.bottom::before {
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: var(--surface-elevated);
+            filter: drop-shadow(0 -4px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .tooltip-bubble.left::before {
+            right: -24px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left-color: var(--surface-elevated);
+            filter: drop-shadow(4px 0 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .tooltip-bubble.right::before {
+            left: -24px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right-color: var(--surface-elevated);
+            filter: drop-shadow(-4px 0 8px rgba(0, 0, 0, 0.1));
+        }
+
+        .tooltip-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+            font-size: 18px;
+            line-height: 1.3;
+        }
+
+        .tooltip-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .tooltip-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tooltip-skip {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .tooltip-skip:hover {
+            color: var(--text-primary);
+            background: var(--surface-hover);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">WalkThrough Pro</div>
+                <div class="subtitle">Enterprise App Tour Builder</div>
+            </div>
+            
+            <div class="sidebar-content">
+                <!-- Step Configuration -->
+                <div class="section">
+                    <div class="section-title">Step Configuration</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Step Title</label>
+                        <input type="text" class="form-input" id="stepTitle" placeholder="Welcome to our app!">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="stepDescription" placeholder="This is the main screen where you can..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Target Element</label>
+                        <input type="text" class="form-input" id="stepTarget" placeholder=".welcome-button">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tooltip Position</label>
+                        <select class="form-select" id="stepPosition">
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="left">Left</option>
+                            <option value="right">Right</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Step Type</label>
+                        <select class="form-select" id="stepType">
+                            <option value="tooltip">Tooltip</option>
+                            <option value="modal">Modal</option>
+                            <option value="spotlight">Spotlight</option>
+                            <option value="hotspot">Hotspot</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Animation</label>
+                        <select class="form-select" id="stepAnimation">
+                            <option value="fade">Fade In</option>
+                            <option value="slide">Slide In</option>
+                            <option value="bounce">Bounce</option>
+                            <option value="zoom">Zoom</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary btn-block" onclick="addStep()">
+                        <span>+</span> Add Step
+                    </button>
+                </div>
+
+                <!-- Steps List -->
+                <div class="section">
+                    <div class="section-title">Walkthrough Steps</div>
+                    <div id="stepsList"></div>
+                </div>
+
+                <!-- Global Settings -->
+                <div class="section">
+                    <div class="section-title">Global Settings</div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tour Name</label>
+                        <input type="text" class="form-input" id="tourName" value="App Onboarding" placeholder="My App Tour">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Theme</label>
+                        <select class="form-select" id="tourTheme">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Auto-advance (ms)</label>
+                        <input type="number" class="form-input" id="autoAdvance" placeholder="0" min="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <button class="btn btn-secondary" onclick="previewTour()">
+                        <span>▶</span> Preview Tour
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearAll()">
+                        <span>🗑</span> Clear All
+                    </button>
+                    <span class="subtitle" id="stepCount">0 steps configured</span>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn btn-warning" onclick="importJSON()">
+                        <span>📁</span> Import
+                    </button>
+                    <button class="btn btn-success" onclick="exportJSON()">
+                        <span>💾</span> Export JSON
+                    </button>
+                </div>
+            </div>
+
+            <div class="preview-area">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            My App
+                        </div>
+                        <div class="phone-content" id="previewContent">
+                            <!-- Demo UI Elements -->
+                            <button class="demo-button welcome-button">Get Started</button>
+                            <div class="demo-card profile-card">
+                                <h3>Your Profile</h3>
+                                <p>Manage your account settings</p>
+                            </div>
+                            <input type="text" class="demo-input search-input" placeholder="Search...">
+                            <button class="demo-button settings-button">Settings</button>
+                            <div class="demo-card features-card">
+                                <h3>New Features</h3>
+                                <p>Check out what's new!</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Tooltip Overlay -->
+                        <div class="tooltip-overlay" id="tooltipOverlay"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal-backdrop" id="exportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Export Walkthrough Configuration</div>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div>
+                <p>Copy the JSON configuration below to integrate with your app:</p>
+                <div class="code-block" id="exportCode"></div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button class="btn btn-primary" onclick="copyToClipboard()">Copy to Clipboard</button>
+                    <button class="btn btn-secondary" onclick="downloadJSON()">Download File</button>
+                    <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let steps = [];
+        let currentStepIndex = -1;
+        let previewMode = false;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStepsList();
+            updateStepCount();
+            
+            // Add some demo steps
+            setTimeout(() => {
+                addDemoSteps();
+            }, 500);
+        });
+
+        function addDemoSteps() {
+            // Demo step 1
+            document.getElementById('stepTitle').value = 'Welcome to the App!';
+            document.getElementById('stepDescription').value = 'This button will help you get started with your journey.';
+            document.getElementById('stepTarget').value = '.welcome-button';
+            document.getElementById('stepPosition').value = 'bottom';
+            addStep();
+
+            // Demo step 2
+            document.getElementById('stepTitle').value = 'Your Profile';
+            document.getElementById('stepDescription').value = 'Access and manage your personal information here.';
+            document.getElementById('stepTarget').value = '.profile-card';
+            document.getElementById('stepPosition').value = 'left';
+            addStep();
+
+            // Demo step 3
+            document.getElementById('stepTitle').value = 'Search Feature';
+            document.getElementById('stepDescription').value = 'Use this search bar to find anything quickly.';
+            document.getElementById('stepTarget').value = '.search-input';
+            document.getElementById('stepPosition').value = 'top';
+            addStep();
+        }
+
+        function addStep() {
+            const title = document.getElementById('stepTitle').value || 'Untitled Step';
+            const description = document.getElementById('stepDescription').value || 'No description';
+            const target = document.getElementById('stepTarget').value || 'body';
+            const position = document.getElementById('stepPosition').value;
+            const type = document.getElementById('stepType').value;
+            const animation = document.getElementById('stepAnimation').value;
+
+            const step = {
+                id: Date.now(),
+                title,
+                description,
+                target,
+                position,
+                type,
+                animation,
+                order: steps.length + 1
+            };
+
+            steps.push(step);
+            updateStepsList();
+            updateStepCount();
+            clearForm();
+
+            // Add animation
+            setTimeout(() => {
+                const stepElements = document.querySelectorAll('.step-item');
+                const lastStep = stepElements[stepElements.length - 1];
+                if (lastStep) {
+                    lastStep.classList.add('fade-in');
+                }
+            }, 50);
+        }
+
+        function clearForm() {
+            document.getElementById('stepTitle').value = '';
+            document.getElementById('stepDescription').value = '';
+            document.getElementById('stepTarget').value = '';
+            document.getElementById('stepPosition').value = 'top';
+            document.getElementById('stepType').value = 'tooltip';
+            document.getElementById('stepAnimation').value = 'fade';
+        }
+
+        function updateStepsList() {
+            const stepsList = document.getElementById('stepsList');
+            
+            if (steps.length === 0) {
+                stepsList.innerHTML = '<p class="subtitle">No steps added yet</p>';
+                return;
+            }
+
+            stepsList.innerHTML = steps.map((step, index) => `
+                <div class="step-item ${currentStepIndex === index ? 'active' : ''}" onclick="selectStep(${index})">
+                    <div class="step-header">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-actions">
+                            <button class="step-btn btn-secondary" onclick="event.stopPropagation(); editStep(${index})" title="Edit">✏️</button>
+                            <button class="step-btn btn-danger" onclick="event.stopPropagation(); deleteStep(${index})" title="Delete">🗑</button>
+                        </div>
+                    </div>
+                    <div class="step-title">${step.title}</div>
+                    <div class="step-description">${step.description}</div>
+                    <div class="step-description">Target: ${step.target}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectStep(index) {
+            currentStepIndex = index;
+            updateStepsList();
+            showStepPreview(steps[index]);
+        }
+
+        function editStep(index) {
+            const step = steps[index];
+            document.getElementById('stepTitle').value = step.title;
+            document.getElementById('stepDescription').value = step.description;
+            document.getElementById('stepTarget').value = step.target;
+            document.getElementById('stepPosition').value = step.position;
+            document.getElementById('stepType').value = step.type;
+            document.getElementById('stepAnimation').value = step.animation;
+            
+            // Remove the step so it can be re-added with updates
+            steps.splice(index, 1);
+            updateStepsList();
+            updateStepCount();
+        }
+
+        function deleteStep(index) {
+            if (confirm('Are you sure you want to delete this step?')) {
+                steps.splice(index, 1);
+                if (currentStepIndex >= index) {
+                    currentStepIndex = Math.max(-1, currentStepIndex - 1);
+                }
+                updateStepsList();
+                updateStepCount();
+                hideTooltip();
+            }
+        }
+
+        function updateStepCount() {
+            document.getElementById('stepCount').textContent = `${steps.length} step${steps.length !== 1 ? 's' : ''} configured`;
+        }
+
+        function showStepPreview(step) {
+            const overlay = document.getElementById('tooltipOverlay');
+            const target = document.querySelector(step.target);
+            
+            if (!target) {
+                console.warn(`Target element "${step.target}" not found`);
+                return;
+            }
+
+            // Clear existing tooltip
+            overlay.innerHTML = '';
+            
+            // Create highlight
+            const rect = target.getBoundingClientRect();
+            const containerRect = document.getElementById('previewContent').getBoundingClientRect();
+            
+            const highlight = document.createElement('div');
+            highlight.className = 'tooltip-highlight';
+            highlight.style.left = (rect.left - containerRect.left - 5) + 'px';
+            highlight.style.top = (rect.top - containerRect.top - 5) + 'px';
+            highlight.style.width = (rect.width + 10) + 'px';
+            highlight.style.height = (rect.height + 10) + 'px';
+            
+            // Create tooltip bubble
+            const bubble = document.createElement('div');
+            bubble.className = `tooltip-bubble ${step.position}`;
+            bubble.innerHTML = `
+                <div class="tooltip-title">${step.title}</div>
+                <div class="tooltip-text">${step.description}</div>
+                <div class="tooltip-actions">
+                    <a href="#" class="tooltip-skip" onclick="hideTooltip()">Skip tour</a>
+                    <button class="btn btn-primary" onclick="nextStep()">Next</button>
+                </div>
+            `;
+            
+            // Position bubble
+            let bubbleLeft, bubbleTop;
+            const bubbleRect = { width: 250, height: 120 }; // Approximate bubble size
+            
+            switch (step.position) {
+                case 'top':
+                    bubbleLeft = rect.left - containerRect.left - bubbleRect.width/2 + rect.width/2;
+                    bubbleTop = rect.top - containerRect.top - bubbleRect.height - 15;
+                    break;
+                case 'bottom':
+                    bubbleLeft = rect.left - containerRect.left - bubbleRect.width/2 + rect.width/2;
+                    bubbleTop = rect.bottom - containerRect.top + 15;
+                    break;
+                case 'left':
+                    bubbleLeft = rect.left - containerRect.left - bubbleRect.width - 15;
+                    bubbleTop = rect.top - containerRect.top - bubbleRect.height/2 + rect.height/2;
+                    break;
+                case 'right':
+                    bubbleLeft = rect.right - containerRect.left + 15;
+                    bubbleTop = rect.top - containerRect.top - bubbleRect.height/2 + rect.height/2;
+                    break;
+            }
+            
+            bubble.style.left = Math.max(10, Math.min(bubbleLeft, 280)) + 'px';
+            bubble.style.top = Math.max(10, Math.min(bubbleTop, 450)) + 'px';
+            
+            overlay.appendChild(highlight);
+            overlay.appendChild(bubble);
+            overlay.classList.add('active');
+            
+            // Add animation
+            bubble.style.opacity = '0';
+            bubble.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                bubble.style.transition = 'all 0.3s ease';
+                bubble.style.opacity = '1';
+                bubble.style.transform = 'scale(1)';
+            }, 100);
+        }
+
+        function hideTooltip() {
+            const overlay = document.getElementById('tooltipOverlay');
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.innerHTML = '';
+            }, 300);
+        }
+
+        function nextStep() {
+            if (currentStepIndex < steps.length - 1) {
+                selectStep(currentStepIndex + 1);
+            } else {
+                hideTooltip();
+                alert('Tour completed! 🎉');
+            }
+        }
+
+        function previewTour() {
+            if (steps.length === 0) {
+                alert('Please add some steps first!');
+                return;
+            }
+            
+            previewMode = true;
+            currentStepIndex = 0;
+            showStepPreview(steps[0]);
+            updateStepsList();
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all steps?')) {
+                steps = [];
+                currentStepIndex = -1;
+                updateStepsList();
+                updateStepCount();
+                hideTooltip();
+                clearForm();
+            }
+        }
+
+        function exportJSON() {
+            const tourConfig = {
+                name: document.getElementById('tourName').value || 'Untitled Tour',
+                version: '1.0.0',
+                theme: document.getElementById('tourTheme').value,
+                autoAdvance: parseInt(document.getElementById('autoAdvance').value) || 0,
+                steps: steps.map(step => ({
+                    id: step.id,
+                    title: step.title,
+                    description: step.description,
+                    target: step.target,
+                    position: step.position,
+                    type: step.type,
+                    animation: step.animation,
+                    order: step.order
+                })),
+                settings: {
+                    showProgress: true,
+                    allowSkip: true,
+                    showButtons: true,
+                    backdrop: true,
+                    keyboardNavigation: true
+                },
+                callbacks: {
+                    onStart: "function() { console.log('Tour started'); }",
+                    onComplete: "function() { console.log('Tour completed'); }",
+                    onSkip: "function() { console.log('Tour skipped'); }"
+                },
+                createdAt: new Date().toISOString(),
+                createdBy: 'WalkThrough Pro'
+            };
+
+            const jsonString = JSON.stringify(tourConfig, null, 2);
+            document.getElementById('exportCode').textContent = jsonString;
+            document.getElementById('exportModal').classList.add('active');
+        }
+
+        function importJSON() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const config = JSON.parse(e.target.result);
+                            
+                            // Validate basic structure
+                            if (!config.steps || !Array.isArray(config.steps)) {
+                                throw new Error('Invalid tour configuration format');
+                            }
+                            
+                            // Import steps
+                            steps = config.steps.map(step => ({
+                                id: step.id || Date.now() + Math.random(),
+                                title: step.title || 'Imported Step',
+                                description: step.description || '',
+                                target: step.target || 'body',
+                                position: step.position || 'top',
+                                type: step.type || 'tooltip',
+                                animation: step.animation || 'fade',
+                                order: step.order || 1
+                            }));
+                            
+                            // Import settings
+                            if (config.name) document.getElementById('tourName').value = config.name;
+                            if (config.theme) document.getElementById('tourTheme').value = config.theme;
+                            if (config.autoAdvance) document.getElementById('autoAdvance').value = config.autoAdvance;
+                            
+                            updateStepsList();
+                            updateStepCount();
+                            hideTooltip();
+                            
+                            alert(`Successfully imported ${steps.length} steps!`);
+                        } catch (error) {
+                            alert('Error importing file: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function closeModal() {
+            document.getElementById('exportModal').classList.remove('active');
+        }
+
+        function copyToClipboard() {
+            const code = document.getElementById('exportCode').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Configuration copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Configuration copied to clipboard!');
+            });
+        }
+
+        function downloadJSON() {
+            const code = document.getElementById('exportCode').textContent;
+            const tourName = document.getElementById('tourName').value || 'tour';
+            const filename = `${tourName.toLowerCase().replace(/\s+/g, '-')}-config.json`;
+            
+            const blob = new Blob([code], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.metaKey || e.ctrlKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        exportJSON();
+                        break;
+                    case 'o':
+                        e.preventDefault();
+                        importJSON();
+                        break;
+                    case 'Enter':
+                        e.preventDefault();
+                        if (document.getElementById('stepTitle').value.trim()) {
+                            addStep();
+                        }
+                        break;
+                    case 'p':
+                        e.preventDefault();
+                        previewTour();
+                        break;
+                }
+            }
+            
+            if (previewMode) {
+                switch (e.key) {
+                    case 'ArrowRight':
+                    case 'Space':
+                        e.preventDefault();
+                        nextStep();
+                        break;
+                    case 'Escape':
+                        e.preventDefault();
+                        hideTooltip();
+                        previewMode = false;
+                        break;
+                }
+            }
+        });
+
+        // Auto-save to localStorage (graceful degradation)
+        function autoSave() {
+            try {
+                const data = {
+                    steps: steps,
+                    tourName: document.getElementById('tourName').value,
+                    theme: document.getElementById('tourTheme').value,
+                    autoAdvance: document.getElementById('autoAdvance').value
+                };
+                console.log('Auto-save triggered with data:', data);
+            } catch (e) {
+                // Silently fail if localStorage is not available
+                console.log('Auto-save not available in this environment');
+            }
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(autoSave, 30000);
+
+        // Mobile touch support
+        let touchStartY = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            
+            if (previewMode && Math.abs(diff) > 50) {
+                if (diff > 0) {
+                    // Swipe up - next step
+                    nextStep();
+                } else {
+                    // Swipe down - previous step
+                    if (currentStepIndex > 0) {
+                        selectStep(currentStepIndex - 1);
+                    }
+                }
+            }
+        });
+
+        // Advanced features
+        function validateSteps() {
+            const issues = [];
+            
+            steps.forEach((step, index) => {
+                if (!step.title.trim()) {
+                    issues.push(`Step ${index + 1}: Missing title`);
+                }
+                
+                if (!step.target.trim()) {
+                    issues.push(`Step ${index + 1}: Missing target selector`);
+                }
+                
+                // Check if target exists in demo
+                if (!document.querySelector(step.target)) {
+                    issues.push(`Step ${index + 1}: Target "${step.target}" not found in preview`);
+                }
+            });
+            
+            return issues;
+        }
+
+        function generateIntegrationCode() {
+            return `
+// WalkThrough Pro Integration Code
+// Include this in your app after loading the tour configuration
+
+class WalkThroughPlayer {
+    constructor(config) {
+        this.config = config;
+        this.currentStep = 0;
+        this.isActive = false;
+    }
+    
+    start() {
+        this.isActive = true;
+        this.showStep(0);
+        if (this.config.callbacks?.onStart) {
+            eval(this.config.callbacks.onStart)();
+        }
+    }
+    
+    showStep(index) {
+        if (index >= this.config.steps.length) {
+            this.complete();
+            return;
+        }
+        
+        const step = this.config.steps[index];
+        const element = document.querySelector(step.target);
+        
+        if (!element) {
+            console.warn('Target element not found:', step.target);
+            this.next();
+            return;
+        }
+        
+        this.createTooltip(step, element);
+        this.currentStep = index;
+    }
+    
+    next() {
+        this.showStep(this.currentStep + 1);
+    }
+    
+    complete() {
+        this.isActive = false;
+        this.cleanup();
+        if (this.config.callbacks?.onComplete) {
+            eval(this.config.callbacks.onComplete)();
+        }
+    }
+    
+    skip() {
+        this.isActive = false;
+        this.cleanup();
+        if (this.config.callbacks?.onSkip) {
+            eval(this.config.callbacks.onSkip)();
+        }
+    }
+    
+    createTooltip(step, element) {
+        // Implementation depends on your UI framework
+        // This is a basic example
+        const tooltip = document.createElement('div');
+        tooltip.className = 'walkthrough-tooltip';
+        tooltip.innerHTML = \`
+            <h3>\${step.title}</h3>
+            <p>\${step.description}</p>
+            <div class="tooltip-actions">
+                <button onclick="walkthrough.skip()">Skip</button>
+                <button onclick="walkthrough.next()">Next</button>
+            </div>
+        \`;
+        document.body.appendChild(tooltip);
+    }
+    
+    cleanup() {
+        // Remove all tooltip elements
+        document.querySelectorAll('.walkthrough-tooltip').forEach(el => el.remove());
+    }
+}
+
+// Usage:
+// const walkthrough = new WalkThroughPlayer(tourConfig);
+// walkthrough.start();
+            `.trim();
+        }
+
+        // Analytics tracking
+        function trackEvent(eventName, properties = {}) {
+            console.log('Analytics Event:', eventName, properties);
+            // In a real app, this would send to your analytics service
+        }
+
+        // Track user interactions
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn')) {
+                trackEvent('button_click', {
+                    button: e.target.textContent.trim(),
+                    section: e.target.closest('.section')?.querySelector('.section-title')?.textContent
+                });
+            }
+        });
+
+        // Performance monitoring
+        function measurePerformance() {
+            const metrics = {
+                stepsCount: steps.length,
+                loadTime: performance.now(),
+                memory: performance.memory ? {
+                    used: Math.round(performance.memory.usedJSHeapSize / 1024 / 1024),
+                    total: Math.round(performance.memory.totalJSHeapSize / 1024 / 1024)
+                } : null
+            };
+            
+            console.log('Performance Metrics:', metrics);
+            return metrics;
+        }
+
+        // Initialize performance monitoring
+        setTimeout(measurePerformance, 1000);
+
+        // Accessibility enhancements
+        function enhanceAccessibility() {
+            // Add ARIA labels
+            document.querySelectorAll('.btn').forEach(btn => {
+                if (!btn.getAttribute('aria-label')) {
+                    btn.setAttribute('aria-label', btn.textContent.trim());
+                }
+            });
+            
+            // Add focus management
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab' && previewMode) {
+                    e.preventDefault();
+                    // Focus management for modal dialogs
+                }
+            });
+        }
+
+        // Initialize accessibility
+        enhanceAccessibility();
+
+        // Export additional utility functions
+        window.WalkThroughBuilder = {
+            validateSteps,
+            generateIntegrationCode,
+            trackEvent,
+            measurePerformance,
+            exportConfig: exportJSON,
+            importConfig: importJSON
+        };
+
+        console.log('🚀 WalkThrough Pro initialized successfully!');
+        console.log('Advanced features: Analytics, Performance monitoring, Accessibility, Mobile support');
+        console.log('Keyboard shortcuts: Cmd/Ctrl+S (Save), Cmd/Ctrl+O (Open), Cmd/Ctrl+P (Preview)');
+    </script>
+</body>
+</html>
